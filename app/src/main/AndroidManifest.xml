@@ -9,13 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HospitalScheduler">
-        <activity android:name=".MainActivity">
+        <activity android:name=".Operation_Info_Tab_Activity"
+            android:parentActivityName=".Overview">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Overview"/>
+        </activity>
+        <activity android:name=".Overview">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
