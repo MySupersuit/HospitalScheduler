@@ -3,7 +3,7 @@ package com.example.hospitalscheduler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperatingTheatreV2 {
+public class OperatingTheatre {
 
     //    private List<Operation> schedule;
 
@@ -25,7 +25,7 @@ public class OperatingTheatreV2 {
     private int isNotified; // boolean 1/0 = true/false
     private ArrayList<Operation> schedule;
 
-    public OperatingTheatreV2(int number, int isNotified, ArrayList<Operation> schedule) {
+    public OperatingTheatre(int number, int isNotified, ArrayList<Operation> schedule) {
         this.number = number;
         this.isNotified = isNotified;
         this.schedule = schedule;

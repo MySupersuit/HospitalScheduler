@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link OTInfoFragment#newInstance} factory method to
@@ -21,18 +23,13 @@ public class OTInfoFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String SURGEON = "param1";
-    private static final String CATEGORY = "param2";
-    private static final String STAGE = "param3";
-    private static final String NUMBER = "param4";
-    private static final String PROCEDURE = "param5";
+    private static final String NUMBER = "param1";
+    private static final String SCHEDULE = "param2";
+    private static final String NOTIFIED = "param3";
 
-    // TODO: Rename and change types of parameters
-    private String surgeon;
-    private int category_thumb;
-    private int stage;
     private int ot_num;
-    private String procedure;
+    private ArrayList<Operation> schedule;
+    private int isNotified;
 
     private TextView num_tv;
     private TextView category_tv;
@@ -48,21 +45,18 @@ public class OTInfoFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param number OT number
-     * @param stage Stage of operation
-     * @param surgeon Head surgeon of operation
-     * @param category_thumb The category thumbnail
-     * @return A new instance of fragment OTInfoFragment.
+//     * @param number OT number
+//     * @param stage Stage of operation
+//     * @param surgeon Head surgeon of operation
+//     * @param category_thumb The category thumbnail
+//     * @return A new instance of fragment OTInfoFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static OTInfoFragment newInstance(int number, int stage, String surgeon, int category_thumb, String curr_op) {
+    public static OTInfoFragment newInstance(int number, ArrayList<Operation> schedule, int isNotified) {
         OTInfoFragment fragment = new OTInfoFragment();
         Bundle args = new Bundle();
         args.putInt(NUMBER, number);
-        args.putInt(STAGE, stage);
-        args.putString(SURGEON, surgeon);
-        args.putInt(CATEGORY, category_thumb);
-        args.putString(PROCEDURE, curr_op);
+        args.putParcelableArrayList(SCHEDULE, schedule);
+        args.putInt(NOTIFIED, isNotified);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,11 +69,10 @@ public class OTInfoFragment extends Fragment {
 
         if (getArguments() != null) {
             ot_num = getArguments().getInt(NUMBER);
-            surgeon = getArguments().getString(SURGEON);
-            category_thumb = getArguments().getInt(CATEGORY);
-            stage = getArguments().getInt(STAGE);
-            procedure = getArguments().getString(PROCEDURE);
+            this.schedule = getArguments().getParcelableArrayList(SCHEDULE);
+            this.isNotified = getArguments().getInt(NOTIFIED);
         }
+
     }
 
     @Override
@@ -93,30 +86,13 @@ public class OTInfoFragment extends Fragment {
         this.stage_tv = (TextView) view.findViewById(R.id.info_frag_stage);
         this.proc_tv = (TextView) view.findViewById(R.id.info_frag_procedure);
 
-        surgeon_tv.setText("Surgeon: " + this.surgeon);
+        surgeon_tv.setText("Surgeon: " + this.schedule.get(0).getSurgeon());
         num_tv.setText("OT " + String.valueOf(this.ot_num));
-        category_tv.setText("Category: " + getCategoryGivenCategoryThumb(this.category_thumb));
-        stage_tv.setText("Stage: "+String.valueOf(this.stage));
-        proc_tv.setText("Procedure: " + this.procedure);
-
+        category_tv.setText("Category: " + this.schedule.get(0).getCategory());
+        stage_tv.setText("Stage: "+ String.valueOf(this.schedule.get(0).getStage()));
+        proc_tv.setText("Procedure: " + this.schedule.get(0).getProcedure());
 
         return view;
     }
 
-    private String getCategoryGivenCategoryThumb(int id) {
-        switch (id) {
-            case R.drawable.humanbrain:
-                return "Neuro";
-            case R.drawable.ent_icon:
-                return "ENT";
-            case R.drawable.intestine_icon:
-                return "Colorectal";
-            case R.drawable.vascularicon:
-                return "Vascular";
-            case R.drawable.ortho_icon:
-                return "Orthopedic";
-            default:
-                return null;
-        }
-    }
 }
