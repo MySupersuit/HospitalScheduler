@@ -11,9 +11,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.util.Log;
 
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 public class Operation_Info_Tab_Activity extends AppCompatActivity {
 
@@ -28,26 +32,23 @@ public class Operation_Info_Tab_Activity extends AppCompatActivity {
         TabItem tabInfo = findViewById(R.id.op_info_tab);
         TabItem tabSchedule = findViewById(R.id.op_schedule_tab);
         ViewPager viewPager = findViewById(R.id.info_view_pager);
-
-
+        
         pagerAdapter = new OTPagerAdapter(getSupportFragmentManager());
 
-        Intent intent = getIntent();
-        int ot_num = intent.getExtras().getInt("Number");
-        int ot_stage = intent.getExtras().getInt("Stage");
-        String surgeon_name = intent.getExtras().getString("Surgeon");
-        String start_time = intent.getExtras().getString("Time");
-        int category_thumb = intent.getExtras().getInt("Category");
-        String curr_op = intent.getExtras().getString("Operation");
+        ArrayList<Operation> schedule = new ArrayList<>();
+        int ot_num = -1;
+        int notified = -1;
+        if (getIntent().getExtras() != null) {
+            Intent intent = getIntent();
+            schedule = intent.getParcelableArrayListExtra("Schedule");
+            ot_num = intent.getExtras().getInt("Number");
+            notified = intent.getExtras().getInt("Notified");
+        }
 
-        OTInfoFragment in_info_frag = OTInfoFragment.newInstance(ot_num, ot_stage, surgeon_name,
-                category_thumb, curr_op);
+        OTInfoFragment info_frag = OTInfoFragment.newInstance(ot_num, schedule, notified);
+        pagerAdapter.add(info_frag, "Info");
 
-//        OTInfoFragment info_frag = OTInfoFragment.newInstance(String.valueOf(ot_num), surgeon_name);
-
-        OTScheduleFragment sched_frag = OTScheduleFragment.newInstance(ot_num, start_time);
-
-        pagerAdapter.add(in_info_frag, "Info");
+        OTScheduleFragment sched_frag = OTScheduleFragment.newInstance(ot_num, schedule.get(0).getStartTime());
         pagerAdapter.add(sched_frag, "Schedule");
 
         viewPager.setAdapter(pagerAdapter);
