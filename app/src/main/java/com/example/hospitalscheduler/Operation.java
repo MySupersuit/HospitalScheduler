@@ -38,18 +38,6 @@ public class Operation implements Parcelable {
         this.startTime = startTime;
     }
 
-    public static final Creator<Operation> CREATOR = new Creator<Operation>() {
-        @Override
-        public Operation createFromParcel(Parcel in) {
-            return new Operation(in);
-        }
-
-        @Override
-        public Operation[] newArray(int size) {
-            return new Operation[size];
-        }
-    };
-
     public String[] getStaff() {
         return new String[]{getSurgeon(), getAnaesthetist(), getScrubNurse(), getRegistrar()};
     }
@@ -150,6 +138,19 @@ public class Operation implements Parcelable {
         return startTime;
     }
 
+    // Parcelable class functions
+    public static final Creator<Operation> CREATOR = new Creator<Operation>() {
+        @Override
+        public Operation createFromParcel(Parcel in) {
+            return new Operation(in);
+        }
+
+        @Override
+        public Operation[] newArray(int size) {
+            return new Operation[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
@@ -185,15 +186,3 @@ public class Operation implements Parcelable {
     }
 }
 
-//    private String procedure;
-//    private String category;
-//    private int stage;
-//    private String surgeon;
-//    private String anaesthetist;
-//    private String scrubNurse;
-//    private String registrar;
-//    private Operation prevOp;
-//    private Operation nextOp;
-//    private boolean isDelayed;
-//    private boolean isCovid;
-//    private String startTime;  // set when patient goes into first stage

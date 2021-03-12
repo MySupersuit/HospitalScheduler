@@ -17,6 +17,9 @@ public final class Utilites {
                 return R.drawable.ortho_icon;
             case CARDIOTHOR:
                 return R.drawable.intestine_icon;
+            case UROLOGY:
+//                return R.drawable.urology;
+                return R.drawable.ic_urology_icon;
             default:
                 return -1;
         }
@@ -35,6 +38,8 @@ public final class Utilites {
                 return "#E6E6FA";
             case ORTHO:
                 return "#FFFFFF";
+            case UROLOGY:
+                return "#98FB98";
             default:
                 return "errorInUtilities";
         }

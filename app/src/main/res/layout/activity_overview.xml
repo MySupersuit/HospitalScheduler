@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Overview"
+    android:background="#F6F6F6"
     android:padding="8dp"
-    android:background="#f8f8f8">
-    
+    tools:context=".Overview">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylerview_id"
         android:layout_width="match_parent"
