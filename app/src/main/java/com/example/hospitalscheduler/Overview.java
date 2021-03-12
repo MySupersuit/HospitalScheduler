@@ -21,16 +21,26 @@ public class Overview extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
 
         ArrayList<Operation> schedule1 = new ArrayList<>();
-        schedule1.add(new Operation("Head Deflation", NEURO, 0,
+        schedule1.add(new Operation("Head Deflation", NEURO, 1,
                 "Dr. John Zoidberg", "Annie",
                 "JD", "Rev. Nichols",
+                null, null,
+                0, 0, "20"));
+        schedule1.add(new Operation("Broken Heart", CARDIOTHOR, 0,
+                "Dr. Who", "Greg",
+                "Amelia", "Derrick Alek",
                 null, null,
                 0, 0, null));
 
         ArrayList<Operation> schedule2 = new ArrayList<>();
-        schedule2.add(new Operation("Vascularitis", VASCULAR, 0,
+        schedule2.add(new Operation("Vascularitis", VASCULAR, 3,
                 "Dr. Nick Riviera", "Annie",
                 "Turk", "Archbishop Tutu",
+                null, null,
+                0, 0, "6"));
+        schedule2.add(new Operation("Head Deflation", NEURO, 0,
+                "Dr. John Zoidberg", "Annie",
+                "JD", "Rev. Nichols",
                 null, null,
                 0, 0, null));
 
@@ -40,6 +50,11 @@ public class Overview extends AppCompatActivity {
                 "Todd", "Francis",
                 null, null,
                 0, 0, null));
+        schedule3.add(new Operation("Vascularitis", VASCULAR, 0,
+                "Dr. Nick Riviera", "Annie",
+                "Turk", "Archbishop Tutu",
+                null, null,
+                0, 0, null));
 
         ArrayList<Operation> schedule4 = new ArrayList<>();
         schedule4.add(new Operation("Spare Ribs", ORTHO, 0,
@@ -47,11 +62,21 @@ public class Overview extends AppCompatActivity {
                 "Elliot", "Tom Cruise",
                 null, null,
                 0, 0, null));
+        schedule4.add(new Operation("Blocked Nose", HEAD_AND_NECK, 0,
+                "Dr. Perry Cox", "Tess",
+                "Todd", "Francis",
+                null, null,
+                0, 0, null));
 
         ArrayList<Operation> schedule5 = new ArrayList<>();
-        schedule5.add(new Operation("Broken Heart", CARDIOTHOR, 0,
+        schedule5.add(new Operation("Broken Heart", UROLOGY, 0,
                 "Dr. Who", "Greg",
                 "Amelia", "Derrick Alek",
+                null, null,
+                0, 0, null));
+        schedule5.add(new Operation("Spare Ribs", ORTHO, 0,
+                "Dr. Greg House", "Dave",
+                "Elliot", "Tom Cruise",
                 null, null,
                 0, 0, null));
 

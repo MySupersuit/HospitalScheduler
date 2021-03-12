@@ -3,5 +3,5 @@
     <item android:drawable="@drawable/ic_baseline_notifications_24"
         android:state_checked="true"/>
     <item android:drawable="@drawable/ic_baseline_notifications_none_24"
-        android:state_checked="false"/>
+        android:state_checked="false" />
 </selector>
