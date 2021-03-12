@@ -44,33 +44,151 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+<!--        <TextView-->
+<!--            android:id="@+id/ov_top_colour_tv"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:background="#448AFF"-->
+<!--            cardview:layout_constraintStart_toStartOf="parent"-->
+<!--            cardview:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/card_background_image_id"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:alpha="1"-->
+<!--            android:padding="3dp"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            cardview:layout_constraintStart_toStartOf="@+id/ov_top_colour_tv"-->
+<!--            cardview:layout_constraintTop_toTopOf="parent" />-->
+
+
         <TextView
             android:id="@+id/ov_ot_num_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
             android:text="TextView"
+            android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold"
             cardview:layout_constraintStart_toStartOf="parent"
-            cardview:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/black"/>
+            cardview:layout_constraintTop_toBottomOf="@+id/ov_top_colour_tv" />
 
-        <TextView
-            android:id="@+id/ov_status_tv"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="24dp"
-            android:background="#BFFF"
-            android:gravity="center"
-            android:text="status placeholder"
-            android:padding="5dp"
-            android:textSize="18sp"
-            cardview:layout_constraintEnd_toEndOf="parent"
-            cardview:layout_constraintStart_toStartOf="parent"
-            cardview:layout_constraintTop_toBottomOf="@+id/ov_ot_num_tv" />
+            android:layout_height="wrap_content"
+            cardview:layout_constraintBottom_toTopOf="@+id/ov_head_surgeon_tv"
+            cardview:layout_constraintTop_toBottomOf="@+id/ov_notification_button">
+
+            <TableLayout
+                android:id="@+id/ov_card_table"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/ov_status_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:background="#BFFF"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="1"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_status_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_weight="1"
+                        android:background="#BFFF"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="2"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_status_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:layout_weight="1"
+                        android:background="#BFFF"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="3"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_status_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="4"
+                        android:layout_weight="1"
+                        android:background="#BFFF"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="4"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_status_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="5"
+                        android:layout_weight="1"
+                        android:background="#BFFF"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:text="5"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/ov_status_tv"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="0dp"-->
+
+            <!--                android:background="#BFFF"-->
+            <!--                android:gravity="center"-->
+            <!--                android:padding="5dp"-->
+            <!--                android:text="status placeholder"-->
+            <!--                android:textSize="18sp"-->
+            <!--                cardview:layout_constraintEnd_toEndOf="parent"-->
+            <!--                cardview:layout_constraintStart_toStartOf="parent"-->
+            <!--                cardview:layout_constraintTop_toTopOf="parent" />-->
+            <!--            cardview:layout_constraintTop_toBottomOf="@+id/ov_ot_num_tv" />-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/ov_head_surgeon_tv"
@@ -103,7 +221,6 @@
             android:id="@+id/ov_notification_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/notfication_toggle_button"
@@ -113,13 +230,10 @@
             android:textOn=""
 
             cardview:layout_constraintEnd_toEndOf="parent"
-            cardview:layout_constraintTop_toTopOf="parent" />
+            cardview:layout_constraintTop_toBottomOf="@+id/ov_top_colour_tv" />
 
-        <!--            android:drawable="@drawable/notfication_toggle_button"-->
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
-
-<!--</androidx.cardview.widget.CardView>-->
