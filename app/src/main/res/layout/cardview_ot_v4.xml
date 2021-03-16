@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ot_cardview_id"
+    android:layout_width="match_parent"
+    android:layout_height="230dp"
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:elevation="50dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    cardview:cardCornerRadius="8dp"
+    cardview:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ov_top_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_blue"
+            cardview:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                cardview:layout_constraintEnd_toEndOf="parent"
+                cardview:layout_constraintStart_toStartOf="parent"
+                cardview:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/ov_ot_num_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center"
+                    android:text="OT X"
+                    android:textColor="@color/black"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintEnd_toStartOf="@id/ov_notification_button"
+                    cardview:layout_constraintTop_toTopOf="parent" />
+
+
+                <ToggleButton
+                    android:id="@+id/ov_notification_button"
+                    android:layout_width="@dimen/bell_size"
+                    android:layout_height="@dimen/bell_size"
+                    android:background="@drawable/notfication_toggle_button"
+                    android:focusable="false"
+
+                    android:focusableInTouchMode="false"
+                    android:textOff=""
+                    android:textOn=""
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintEnd_toEndOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="Current"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                cardview:layout_constraintBottom_toBottomOf="parent"
+                cardview:layout_constraintStart_toStartOf="parent"
+                cardview:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:text="Next"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                cardview:layout_constraintBottom_toBottomOf="parent"
+                cardview:layout_constraintEnd_toEndOf="parent"
+                cardview:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            cardview:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            cardview:layout_constraintTop_toBottomOf="@+id/ov_top_tab">-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            cardview:layout_constraintBottom_toBottomOf="parent"
+            cardview:layout_constraintTop_toBottomOf="@+id/ov_top_tab">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/ov_curr_back_colour"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#CCECC1"
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintEnd_toEndOf="parent"
+                    cardview:layout_constraintStart_toStartOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ov_curr_back_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:alpha="0.1"
+                    android:padding="12dp"
+                    android:scaleType="centerCrop"
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintEnd_toEndOf="parent"
+                    cardview:layout_constraintStart_toStartOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent" />
+
+                <!--                Overlay-->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.3"
+                    android:background="#000" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="20dp"
+                    cardview:layout_constraintStart_toStartOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/curr_clock_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/clock_icon"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        cardview:layout_constraintBottom_toBottomOf="parent"
+                        cardview:layout_constraintStart_toEndOf="@+id/curr_clock_icon"
+                        cardview:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/curr_in_stage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="stage X:"
+                            android:textColor="#FFF"
+                            android:textSize="12dp"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/curr_stage_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:text="XX"
+                            android:textColor="@color/white"
+                            android:textSize="35dp"
+
+                            android:textStyle="bold"
+                            cardview:layout_constraintStart_toStartOf="@+id/curr_in_stage"
+                            cardview:layout_constraintTop_toBottomOf="@+id/curr_in_stage" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="m"
+                            android:textColor="@color/white"
+                            android:textSize="20dp"
+                            cardview:layout_constraintBaseline_toBaselineOf="@+id/curr_stage_time"
+                            cardview:layout_constraintStart_toEndOf="@+id/curr_stage_time" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="20dp"
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/curr_doctor_icon"
+                        android:layout_width="@dimen/clock_size"
+                        android:layout_height="@dimen/clock_size"
+                        android:background="@drawable/doctoricon"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_curr_surgeon"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="Surgeon"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
+                        cardview:layout_constraintBottom_toBottomOf="parent"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintStart_toEndOf="@+id/curr_doctor_icon"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/status_cl"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/ov_status_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:background="#FFF"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="1"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_status_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:background="#FFF"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="2"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_status_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:background="#FFF"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="3"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_status_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:background="#FFF"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="4"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_status_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="1"
+                        android:layout_weight="1"
+                        android:background="#FFF"
+                        android:gravity="center"
+                        android:paddingHorizontal="10dp"
+                        android:text="5"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/ov_next_back_colour"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#E2C1EC"
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintEnd_toEndOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ov_next_back_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:alpha="0.1"
+                    android:padding="12dp"
+                    android:scaleType="fitCenter"
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintEnd_toEndOf="parent"
+                    cardview:layout_constraintStart_toStartOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent" />
+
+                <!--                Overlay-->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.3"
+                    android:background="#000" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/next_time_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="20dp"
+                    cardview:layout_constraintStart_toStartOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/next_clock_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/clock_icon"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        cardview:layout_constraintBottom_toBottomOf="parent"
+                        cardview:layout_constraintStart_toEndOf="@+id/next_clock_icon"
+                        cardview:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/next_in_stage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="stage X:"
+                            android:textColor="#FFF"
+                            android:textSize="12dp"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/next_stage_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:includeFontPadding="false"
+                            android:text="XX"
+                            android:textColor="@color/white"
+                            android:textSize="35dp"
+                            android:textStyle="bold"
+                            cardview:layout_constraintStart_toStartOf="@+id/next_in_stage"
+                            cardview:layout_constraintTop_toBottomOf="@+id/next_in_stage" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="m"
+                            android:textColor="@color/white"
+                            android:textSize="20dp"
+                            cardview:layout_constraintBaseline_toBaselineOf="@+id/next_stage_time"
+                            cardview:layout_constraintStart_toEndOf="@+id/next_stage_time" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="20dp"
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/next_doctor_icon"
+                        android:layout_width="@dimen/clock_size"
+                        android:layout_height="@dimen/clock_size"
+                        android:background="@drawable/doctoricon"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/ov_next_surgeon"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Surgeon"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
+                        cardview:layout_constraintBottom_toBottomOf="parent"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintStart_toEndOf="@+id/next_doctor_icon"
+                        cardview:layout_constraintTop_toTopOf="parent"
+                        android:ellipsize="end"
+                        android:maxLines="2"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:orientation="horizontal">-->
+
+
+    <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_weight="1">-->
+
+    <!--            &lt;!&ndash;            <LinearLayout&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:orientation="vertical">&ndash;&gt;-->
+
+    <!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="match_parent"-->
+    <!--                android:layout_weight="1">-->
+
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/ov_curr_back_colour"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:background="#E57373"-->
+    <!--                    cardview:layout_constraintBottom_toBottomOf="parent"-->
+    <!--                    cardview:layout_constraintEnd_toEndOf="parent"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/ov_curr_back_image"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:adjustViewBounds="true"-->
+    <!--                    android:alpha="0.1"-->
+    <!--                    android:padding="12dp"-->
+    <!--                    android:scaleType="centerCrop"-->
+    <!--                    cardview:layout_constraintBottom_toBottomOf="parent"-->
+    <!--                    cardview:layout_constraintEnd_toEndOf="parent"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/ov_ot_num_tv"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginStart="8dp"-->
+    <!--                    android:layout_marginLeft="8dp"-->
+    <!--                    android:layout_marginTop="8dp"-->
+    <!--                    android:text="OT"-->
+    <!--                    android:textColor="@color/black"-->
+    <!--                    android:textSize="30sp"-->
+    <!--                    android:textStyle="bold"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--                    <TextView-->
+    <!--                        android:layout_width="wrap_content"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:layout_marginTop="8dp"-->
+    <!--                        android:layout_marginEnd="32dp"-->
+    <!--                        android:layout_marginRight="32dp"-->
+    <!--                        android:text="Current"-->
+    <!--                        android:textSize="20sp"-->
+    <!--                        cardview:layout_constraintEnd_toEndOf="parent"-->
+    <!--                        cardview:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/ov_curr_surgeon"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginStart="8dp"-->
+    <!--                    android:layout_marginLeft="8dp"-->
+    <!--                    android:layout_marginTop="64dp"-->
+    <!--                    android:text="TextView"-->
+    <!--                    android:textColor="#123456"-->
+    <!--                    android:textSize="18sp"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toTopOf="@+id/ov_curr_back_colour" />-->
+
+    <!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+    <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_weight="1">-->
+
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/ov_next_back_colour"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:background="#64B5F6"-->
+    <!--                    cardview:layout_constraintBottom_toBottomOf="parent"-->
+    <!--                    cardview:layout_constraintEnd_toEndOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/ov_next_back_image"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:adjustViewBounds="true"-->
+    <!--                    android:alpha="0.1"-->
+    <!--                    android:padding="12dp"-->
+    <!--                    android:scaleType="fitCenter"-->
+    <!--                    cardview:layout_constraintBottom_toBottomOf="parent"-->
+    <!--                    cardview:layout_constraintEnd_toEndOf="parent"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--                <ToggleButton-->
+    <!--                    android:id="@+id/ov_notification_button"-->
+    <!--                    android:layout_width="50dp"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginTop="8dp"-->
+    <!--                    android:layout_marginEnd="8dp"-->
+    <!--                    android:layout_marginRight="8dp"-->
+    <!--                    android:background="@drawable/notfication_toggle_button"-->
+    <!--                    android:focusable="false"-->
+    <!--                    android:focusableInTouchMode="false"-->
+
+    <!--                android:textOff=""-->
+    <!--                android:textOn=""-->
+    <!--                cardview:layout_constraintEnd_toEndOf="parent"-->
+    <!--                cardview:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginStart="8dp"-->
+    <!--                android:layout_marginLeft="8dp"-->
+    <!--                android:layout_marginTop="8dp"-->
+    <!--                android:text="Next"-->
+    <!--                android:textSize="20sp"-->
+    <!--                cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                cardview:layout_constraintTop_toTopOf="parent" />-->
+
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/ov_next_surgeon"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_marginTop="64dp"-->
+    <!--                android:layout_marginEnd="8dp"-->
+    <!--                android:layout_marginRight="8dp"-->
+    <!--                android:gravity="end"-->
+    <!--                android:text="TextView"-->
+    <!--                android:textColor="#123456"-->
+    <!--                android:textSize="18sp"-->
+    <!--                cardview:layout_constraintEnd_toEndOf="parent"-->
+    <!--                cardview:layout_constraintTop_toTopOf="@+id/ov_next_back_colour" />-->
+
+    <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--    </LinearLayout>-->
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
+
+
+    <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--            android:id="@+id/constraintLayout"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            cardview:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            cardview:layout_constraintEnd_toEndOf="parent"-->
+    <!--            cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--            cardview:layout_constraintTop_toTopOf="parent">-->
+
+    <!--            &lt;!&ndash;            <TableLayout&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:id="@+id/ov_stage_table"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                cardview:layout_constraintBottom_toBottomOf="parent"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                cardview:layout_constraintTop_toTopOf="parent">&ndash;&gt;-->
+
+    <!--            &lt;!&ndash;                <TableRow android:gravity="center_horizontal">&ndash;&gt;-->
+
+    <!--            &lt;!&ndash;            <LinearLayout&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                android:orientation="vertical"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                cardview:layout_constraintEnd_toEndOf="parent"&ndash;&gt;-->
+    <!--            &lt;!&ndash;                cardview:layout_constraintStart_toStartOf="parent">&ndash;&gt;-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/ov_status_1"-->
+    <!--                    android:layout_width="46dp"-->
+    <!--                    android:layout_height="46dp"-->
+    <!--                    android:layout_column="1"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="#FFF"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:text="1"-->
+    <!--                    android:textSize="25sp"-->
+    <!--                    android:textStyle="bold"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/ov_status_2"-->
+    <!--                    android:layout_width="46dp"-->
+    <!--                    android:layout_height="46dp"-->
+    <!--                    android:layout_column="2"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="#FFF"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:padding="10dp"-->
+    <!--                    android:text="2"-->
+    <!--                    android:textSize="25sp"-->
+    <!--                    android:textStyle="bold"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toBottomOf="@id/ov_status_1" />-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/ov_status_3"-->
+    <!--                    android:layout_width="46dp"-->
+    <!--                    android:layout_height="46dp"-->
+    <!--                    android:layout_column="3"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="#FFF"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:padding="10dp"-->
+    <!--                    android:text="3"-->
+    <!--                    android:textSize="25sp"-->
+    <!--                    android:textStyle="bold"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toBottomOf="@id/ov_status_2" />-->
+
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/ov_status_4"-->
+    <!--                    android:layout_width="46dp"-->
+    <!--                    android:layout_height="46dp"-->
+    <!--                    android:layout_column="4"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="#FFF"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:padding="10dp"-->
+    <!--                    android:text="4"-->
+    <!--                    android:textSize="25sp"-->
+    <!--                    android:textStyle="bold"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toBottomOf="@id/ov_status_3" />-->
+
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/ov_status_5"-->
+    <!--                    android:layout_width="46dp"-->
+    <!--                    android:layout_height="46dp"-->
+    <!--                    android:layout_column="5"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="#FFF"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:padding="10sp"-->
+
+    <!--                    android:text="5"-->
+    <!--                    android:textSize="25sp"-->
+    <!--                    android:textStyle="bold"-->
+    <!--                    cardview:layout_constraintStart_toStartOf="parent"-->
+    <!--                    cardview:layout_constraintTop_toBottomOf="@id/ov_status_4" />-->
+
+
+    <!--            &lt;!&ndash;            </LinearLayout>&ndash;&gt;-->
+    <!--            &lt;!&ndash;                            </TableRow>&ndash;&gt;-->
+
+    <!--            &lt;!&ndash;            </TableLayout>&ndash;&gt;-->
+
+    <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+</com.google.android.material.card.MaterialCardView>
