@@ -22,7 +22,7 @@ public class OTScheduleFragment extends Fragment {
     private static final String NUMBER = "param2";
 
     // TODO: Rename and change types of parameters
-    private String start_time;
+    private long curr_stage_start_time;
     private int ot_num;
 
     private TextView num_tv;
@@ -39,10 +39,10 @@ public class OTScheduleFragment extends Fragment {
      * @return A new instance of fragment OTScheduleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static OTScheduleFragment newInstance(int ot_num, String start_time) {
+    public static OTScheduleFragment newInstance(int ot_num, long curr_stage_start_time) {
         OTScheduleFragment fragment = new OTScheduleFragment();
         Bundle args = new Bundle();
-        args.putString(TIME, start_time);
+        args.putLong(TIME, curr_stage_start_time);
         args.putInt(NUMBER, ot_num);
         fragment.setArguments(args);
         return fragment;
@@ -52,7 +52,7 @@ public class OTScheduleFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            start_time = getArguments().getString(TIME);
+            curr_stage_start_time = getArguments().getLong(TIME);
             ot_num = getArguments().getInt(NUMBER);
         }
     }
@@ -66,7 +66,7 @@ public class OTScheduleFragment extends Fragment {
         this.start_time_tv = view.findViewById(R.id.sched_frag_start_time);
 
         num_tv.setText("OT " + String.valueOf(this.ot_num));
-        start_time_tv.setText("Start time: " + start_time);
+        start_time_tv.setText("Start time: " + curr_stage_start_time);
 
         return view;
     }

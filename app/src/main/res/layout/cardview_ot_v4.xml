@@ -169,7 +169,7 @@
                             android:layout_height="wrap_content"
                             android:text="stage X:"
                             android:textColor="#FFF"
-                            android:textSize="12dp"
+                            android:textSize="12sp"
                             cardview:layout_constraintStart_toStartOf="parent"
                             cardview:layout_constraintTop_toTopOf="parent" />
 
@@ -180,7 +180,7 @@
                             android:includeFontPadding="false"
                             android:text="XX"
                             android:textColor="@color/white"
-                            android:textSize="35dp"
+                            android:textSize="35sp"
 
                             android:textStyle="bold"
                             cardview:layout_constraintStart_toStartOf="@+id/curr_in_stage"
@@ -191,7 +191,7 @@
                             android:layout_height="wrap_content"
                             android:text="m"
                             android:textColor="@color/white"
-                            android:textSize="20dp"
+                            android:textSize="20sp"
                             cardview:layout_constraintBaseline_toBaselineOf="@+id/curr_stage_time"
                             cardview:layout_constraintStart_toEndOf="@+id/curr_stage_time" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -222,7 +222,7 @@
                         android:maxLines="2"
                         android:text="Surgeon"
                         android:textColor="@color/white"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         cardview:layout_constraintBottom_toBottomOf="parent"
                         cardview:layout_constraintEnd_toEndOf="parent"
                         cardview:layout_constraintStart_toEndOf="@+id/curr_doctor_icon"
@@ -390,7 +390,7 @@
                             android:layout_height="wrap_content"
                             android:text="stage X:"
                             android:textColor="#FFF"
-                            android:textSize="12dp"
+                            android:textSize="12sp"
                             cardview:layout_constraintStart_toStartOf="parent"
                             cardview:layout_constraintTop_toTopOf="parent" />
 
@@ -402,7 +402,7 @@
                             android:includeFontPadding="false"
                             android:text="XX"
                             android:textColor="@color/white"
-                            android:textSize="35dp"
+                            android:textSize="35sp"
                             android:textStyle="bold"
                             cardview:layout_constraintStart_toStartOf="@+id/next_in_stage"
                             cardview:layout_constraintTop_toBottomOf="@+id/next_in_stage" />
@@ -412,7 +412,7 @@
                             android:layout_height="wrap_content"
                             android:text="m"
                             android:textColor="@color/white"
-                            android:textSize="20dp"
+                            android:textSize="20sp"
                             cardview:layout_constraintBaseline_toBaselineOf="@+id/next_stage_time"
                             cardview:layout_constraintStart_toEndOf="@+id/next_stage_time" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -439,15 +439,15 @@
                         android:id="@+id/ov_next_surgeon"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
                         android:text="Surgeon"
                         android:textColor="@color/white"
-                        android:textSize="18dp"
+                        android:textSize="18sp"
                         cardview:layout_constraintBottom_toBottomOf="parent"
                         cardview:layout_constraintEnd_toEndOf="parent"
                         cardview:layout_constraintStart_toEndOf="@+id/next_doctor_icon"
-                        cardview:layout_constraintTop_toTopOf="parent"
-                        android:ellipsize="end"
-                        android:maxLines="2"/>
+                        cardview:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

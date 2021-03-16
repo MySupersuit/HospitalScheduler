@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "441107560388",
+    "project_id": "hospitalscheduler-41566",
+    "storage_bucket": "hospitalscheduler-41566.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441107560388:android:660b0bc3a3f44b580f1691",
+        "android_client_info": {
+          "package_name": "com.example.hospitalscheduler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "441107560388-eiam20i7u4teb3g9i2nf429128rjl0dg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXdtNgKVTDRLvkWhG2osZq8dyQVclnGr4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "441107560388-eiam20i7u4teb3g9i2nf429128rjl0dg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

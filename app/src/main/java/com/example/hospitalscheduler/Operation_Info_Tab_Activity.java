@@ -35,7 +35,7 @@ public class Operation_Info_Tab_Activity extends AppCompatActivity {
         
         pagerAdapter = new OTPagerAdapter(getSupportFragmentManager());
 
-        ArrayList<Operation> schedule = new ArrayList<>();
+        ArrayList<OperationV2> schedule = new ArrayList<>();
         int ot_num = -1;
         int notified = -1;
         if (getIntent().getExtras() != null) {
@@ -48,7 +48,7 @@ public class Operation_Info_Tab_Activity extends AppCompatActivity {
         OTInfoFragment info_frag = OTInfoFragment.newInstance(ot_num, schedule, notified);
         pagerAdapter.add(info_frag, "Info");
 
-        OTScheduleFragment sched_frag = OTScheduleFragment.newInstance(ot_num, schedule.get(0).getStartTime());
+        OTScheduleFragment sched_frag = OTScheduleFragment.newInstance(ot_num, schedule.get(0).getCurr_stage_start_time());
         pagerAdapter.add(sched_frag, "Schedule");
 
         viewPager.setAdapter(pagerAdapter);
