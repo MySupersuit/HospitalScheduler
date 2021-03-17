@@ -1,9 +1,11 @@
 package com.example.hospitalscheduler;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,6 +57,11 @@ public final class Utilites {
             default:
                 return "errorInUtilities";
         }
+    }
+
+    public static void makeSnackbar(String message, View view, int length) {
+        Snackbar snackbar = Snackbar.make(view, message, length);
+        snackbar.show();
     }
 
     public static void writeInitDataDB() {

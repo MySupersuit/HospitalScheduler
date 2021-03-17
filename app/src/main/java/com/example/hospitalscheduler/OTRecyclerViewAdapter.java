@@ -55,6 +55,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
 
     @Override
     public void onBindViewHolder(@NonNull OTRecyclerViewAdapter.MyViewHolder holder, int position) {
+
         OperatingTheatreV2 ot = operatingTheatresV2.get(position);
         OperationV2 curr_op = ot.getSchedule().get(0);
         OperationV2 next_op = null;
@@ -114,7 +115,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
 
         // Turn completed and current stages blue
         TextView[] stages = {holder.stage1, holder.stage2,
-                holder.stage3, holder.stage4, holder.stage4};
+                holder.stage3, holder.stage4, holder.stage5};
 
         for (int i = 0; i < curr_op.getCurrent_stage() ; i++) {
             stages[i].setBackgroundColor(Color.parseColor("#40C4FF"));
@@ -126,78 +127,6 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         }
 
     }
-
-//    @Override
-//    public void onBindViewHolder(@NonNull OTRecyclerViewAdapter.MyViewHolder holder, int position) {
-//        OperatingTheatre ot = operatingTheatres.get(position);
-//        Operation curr_op = ot.getSchedule().get(0);
-//        Operation next_op = null;
-//        if (ot.getSchedule().size() > 1) {
-//            next_op = ot.getSchedule().get(1);
-//        }
-//
-//        holder.ot_num.setText("OT " + String.valueOf(ot.getNumber()));
-//
-//        holder.curr_surgeon.setText(curr_op.getSurgeon());
-//        String curr_colour = categoryToColour(curr_op.getCategory());
-//        holder.curr_back_colour.setBackgroundColor(Color.parseColor(curr_colour));
-//        int curr_back_image = categoryToDrawable(curr_op.getCategory());
-//        holder.curr_back_image.setImageResource(curr_back_image);
-//        holder.curr_stage_time.setText(curr_op.getStartTime());     // NOT RIGHT - new field for time in current stage
-//        holder.curr_stage_num.setText("stage " + curr_op.getStage() + ": ");
-//
-//        holder.next_surgeon.setText(next_op.getSurgeon());
-//        String next_colour = categoryToColour(next_op.getCategory());
-//        holder.next_back_colour.setBackgroundColor(Color.parseColor(next_colour));
-//        int next_back_image = categoryToDrawable(next_op.getCategory());
-//        holder.next_back_image.setImageResource(next_back_image);
-//        holder.next_stage_time.setText(next_op.getStartTime()); // NOT RIGHT - new field for time in current stage
-//
-//        holder.cardview.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(mContext, Operation_Info_Tab_Activity.class);
-//                ArrayList<Operation> schedule = (ArrayList<Operation>) ot.getSchedule();
-//                intent.putParcelableArrayListExtra("Schedule", schedule);
-//                intent.putExtra("Number", ot.getNumber());
-//                intent.putExtra("Notified", ot.getIsNotified());
-//
-//                mContext.startActivity(intent);
-//            }
-//        });
-//
-//        holder.notify.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (holder.notify.isChecked()) {
-//                    Toast toast = Toast.makeText(mContext, "Getting notifications for " + operatingTheatres.get(position).getNumber(),
-//                            Toast.LENGTH_SHORT);
-//                    toast.show();
-//                    ot.setIsNotified(1);
-//                } else {
-//                    Toast toast = Toast.makeText(mContext, "Not getting notifications for " + operatingTheatres.get(position).getNumber(),
-//                            Toast.LENGTH_SHORT);
-//                    toast.show();
-//                    ot.setIsNotified(0);
-//                }
-//
-//            }
-//        });
-//
-//        // Turn completed and current stages blue
-//        TextView[] stages = {holder.stage1, holder.stage2,
-//                holder.stage3, holder.stage4, holder.stage4};
-//
-//        for (int i = 0; i < curr_op.getStage() ; i++) {
-//            stages[i].setBackgroundColor(Color.parseColor("#40C4FF"));
-//        }
-//
-//        // Set notification bell
-//        if (ot.getIsNotified() == 1) {
-//            holder.notify.setChecked(true);
-//        }
-//
-//    }
 
     @Override
     public int getItemCount() {

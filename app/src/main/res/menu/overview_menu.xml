@@ -7,5 +7,10 @@
         android:title="Show Notified"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/menu_refresh"
+        app:showAsAction="never"
+        android:title="@string/menu_refresh"/>
+
 
 </menu>

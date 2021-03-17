@@ -1,13 +1,14 @@
 package com.example.hospitalscheduler;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,16 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
 
 import static com.example.hospitalscheduler.Utilites.*;
 
@@ -42,8 +45,16 @@ public class Overview extends AppCompatActivity {
     AlphaAnimation inAnimation;
     AlphaAnimation outAnimation;
     FrameLayout progressBarHolder;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    ArrayList<Integer> notifiedOTs;     // mapping from OTs to notified
+
+    // keeps a most recent list of ops to check against when updates come in
+    private HashMap<String, OperationV2> opsDiffCheck;
+    private HashMap<DatabaseReference, ChildEventListener> mListenerMap;
 
     Context mContext;
+    View mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,45 +65,245 @@ public class Overview extends AppCompatActivity {
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
         spinnerOn();
 
+        mListenerMap = new HashMap<>();
+        opsDiffCheck = new HashMap<>();
+
         my_rv = (RecyclerView) findViewById(R.id.recylerview_id);
         my_rv.setLayoutManager(new GridLayoutManager(this, 1));
+
         mContext = this;
+        mView = (LinearLayout) findViewById(R.id.overview_linear_layout);
 
-        allOps = new ArrayList<>();
-        initDBReaders(new SimpleCallback<ArrayList<OperatingTheatreV2>>() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_overview);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void callback(ArrayList<OperatingTheatreV2> data) {
-                Log.d("DATA", "Data callback called");
-                allOTsv3 = data;
-                lstOTv3 = data;
-                myAdapter = new OTRecyclerViewAdapter(mContext, allOTsv3);
-                my_rv.setAdapter(myAdapter);
-                spinnerOff();
-
+            public void onRefresh() {
+                refresh();
             }
         });
 
-        // Shared preferences necessary?
+        allOps = new ArrayList<>();
+
+
+
+        singleDBRead(
+                new SimpleCallback<ArrayList<ArrayList<OperationV2>>>() {
+                    @Override
+                    public void callback(ArrayList<ArrayList<OperationV2>> data) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        Log.d("DATA", "Data callback called");
+                        ArrayList<OperatingTheatreV2> new_ots = new ArrayList<>();
+                        for (int i = 0; i < data.size(); i++) {
+                            new_ots.add(new OperatingTheatreV2(i+1, 0, data.get(i)));
+//                            allOTsv3.get(i).setSchedule(data.get(i));
+//                            Log.d("isNotified", String.valueOf(allOTsv3.get(i).getIsNotified()));
+                        }
+                        lstOTv3 = new_ots;
+                        allOTsv3 = new_ots;
+
+//                        lstOTv3 = allOTsv3;
+                        myAdapter = new OTRecyclerViewAdapter(mContext, allOTsv3);
+                        my_rv.setAdapter(myAdapter);
+                        spinnerOff();
+                    }
+                },
+                new SimpleCallback<HashMap<String, OperationV2>>() {
+                    @Override
+                    public void callback(HashMap<String, OperationV2> data) {
+                        opsDiffCheck = data;
+                    }
+                });
+
+        // First call returns list of operating theatres
+//        initDBReaders(
+//                new SimpleCallback<ArrayList<OperatingTheatreV2>>() {
+//                    @Override
+//                    public void callback(ArrayList<OperatingTheatreV2> data) {
+//                        allOTsv3 = data;
+//                        lstOTv3 = allOTsv3;
+//                        myAdapter = new OTRecyclerViewAdapter(mContext, allOTsv3);
+//                        my_rv.setAdapter(myAdapter);
+//                        spinnerOff();
+//
+//                    }
+//                },
+//        new SimpleCallback<HashMap<String, OperationV2>>() {
+//                    @Override
+//                    public void callback(HashMap<String, OperationV2> data) {
+//                        opsDiffCheck = data;
+//                    }
+//                });
+
+        initDBListeners(
+                new SimpleCallback<HashMap<DatabaseReference, ChildEventListener>>() {
+                    @Override
+                    public void callback(HashMap<DatabaseReference, ChildEventListener> data) {
+                        Log.d("HASHCALL", data.toString());
+                        mListenerMap = data;
+                    }
+                },
+                new SimpleCallback<DataSnapshot>() { // called on child change
+                    @Override
+                    public void callback(DataSnapshot ds) {
+                        handleDataChange(ds);
+                    }
+                });
+
+        // TODO Is notified not persisting on reload
         sharedPref = getPreferences(Context.MODE_PRIVATE);
-//        if (sharedPref.contains(getString(R.string.show_notified_key))) {
-//            this.showOnlyNotified = sharedPref.getBoolean(getString(R.string.show_notified_key), false);
-//            Log.d("PREF", String.valueOf(this.showOnlyNotified));
-//        } else {
-//            Log.d("NOPREF", "nopref");
-//        }
     }
 
-    // load initial data in
-    public static void initDBReaders(@NonNull SimpleCallback<ArrayList<OperatingTheatreV2>> finishedCallback) {
+    private void handleDataChange(DataSnapshot ds) {
+        Log.d("SNAPCALL", ds.toString());
+        OperationV2 op = ds.getValue(OperationV2.class);
+        Log.d("SNAPCALL", op.toString());
+        String updateKey = op.getId();
+        OperationV2 oldOp = this.opsDiffCheck.get(updateKey);
+        Log.d("OPCHANGE", String.valueOf(op.getTheatre_number()) + " changed");
+        Log.d("NEWOP", String.valueOf(op.getCurrent_stage()));
+        Log.d("OLDOP", String.valueOf(oldOp.getCurrent_stage()));
+        this.opsDiffCheck.put(updateKey, op);
+
+        makeSnackbar("Refresh for new data!", mView, Snackbar.LENGTH_LONG);
+    }
+
+    private void refresh() {
+        Log.d("REFRSH", "refreshing");
+        singleDBRead(
+                new SimpleCallback<ArrayList<ArrayList<OperationV2>>>() {
+                    @Override
+                    public void callback(ArrayList<ArrayList<OperationV2>> data) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        Log.d("DATA", "Data callback called");
+                        ArrayList<OperatingTheatreV2> new_ots = new ArrayList<>();
+                        for (int i = 0; i < data.size(); i++) {
+                            allOTsv3.get(i).setSchedule(data.get(i));
+                            Log.d("isNotified", String.valueOf(allOTsv3.get(i).getIsNotified()));
+                        }
+
+                        if (showOnlyNotified) {
+//                            int[] notifiedOTsArray = getNotifiedOTsArray();
+                            lstOTv3 = getNotifiedOTs();
+
+                            myAdapter = new OTRecyclerViewAdapter(mContext, lstOTv3);
+                        } else {
+                            myAdapter = new OTRecyclerViewAdapter(mContext, allOTsv3);
+                        }
+
+
+//                        lstOTv3 = allOTsv3;
+//                        myAdapter = new OTRecyclerViewAdapter(mContext, allOTsv3);
+                        my_rv.setAdapter(myAdapter);
+                        spinnerOff();
+                    }
+                },
+        new SimpleCallback<HashMap<String, OperationV2>>() {
+                    @Override
+                    public void callback(HashMap<String, OperationV2> data) {
+                        opsDiffCheck = data;
+                    }
+                });
+    }
+
+    // initialise the listeners on each theatre child in database
+    public static void initDBListeners(@NonNull SimpleCallback<HashMap<DatabaseReference, ChildEventListener>> finishedCallback,
+                                       @NonNull SimpleCallback<DataSnapshot> listenerCallback) {
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://hospitalscheduler-41566-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference ref = db.getReference("operations");
 
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-//        ref.add
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<String> ot_nums = new ArrayList<>();
                 ArrayList<OperatingTheatreV2> lstOTs = new ArrayList<>();
+                HashMap<DatabaseReference, ChildEventListener> listenerMap = new HashMap<>();
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String key = ds.getKey();
+                    ot_nums.add(key);
+
+                }
+
+                for (String ot_num : ot_nums) { // 1,2,3,4,5
+                    DataSnapshot ot_num_ds = snapshot.child(ot_num);
+
+                    ChildEventListener listener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            Log.d("CHILD", String.valueOf(ot_num) + " changed");
+                            listenerCallback.callback(snapshot);
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    };
+
+                    DatabaseReference dref = ot_num_ds.getRef();
+                    listenerMap.put(dref, listener);
+
+                    dref.addChildEventListener(listener);
+
+                    ArrayList<String> ops_inOT = new ArrayList<>();
+                    for (DataSnapshot ds : ot_num_ds.getChildren()) {
+                        String key = ds.getKey();
+                        ops_inOT.add(key);
+                    }
+
+                    ArrayList<OperationV2> operationsInOT = new ArrayList<>();
+                    for (String op_key : ops_inOT) {
+                        DataSnapshot ds = ot_num_ds.child(op_key);
+                        OperationV2 op = ds.getValue(OperationV2.class);
+                        operationsInOT.add(op);
+                    }
+                    OperatingTheatreV2 ot = new OperatingTheatreV2(Integer.parseInt(ot_num), 0, operationsInOT);
+                    lstOTs.add(ot);
+                }
+                finishedCallback.callback(listenerMap);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    // for initial read and refreshing
+    public static void singleDBRead(@NonNull SimpleCallback<ArrayList<ArrayList<OperationV2>>> finishedCallback,
+                                     @NonNull SimpleCallback<HashMap<String, OperationV2>> diffCheckCallback) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance("https://hospitalscheduler-41566-default-rtdb.europe-west1.firebasedatabase.app/");
+        DatabaseReference ref = db.getReference("operations");
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            //        ref.add
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<String> ot_nums = new ArrayList<>();
+                ArrayList<OperatingTheatreV2> lstOTs = new ArrayList<>();
+                ArrayList<ArrayList<OperationV2>> new_schedules = new ArrayList<>();
+
+//                ArrayList<DataSnapshot> initSnapshots = new ArrayList<>();
+                HashMap<String, OperationV2> opsDiffCheck = new HashMap<>(); // id - operationV2
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     ot_nums.add(ds.getKey());
                 }
@@ -110,11 +321,18 @@ public class Overview extends AppCompatActivity {
                         DataSnapshot ds = ot_num_ds.child(op_key);
                         OperationV2 op = ds.getValue(OperationV2.class);
                         operationsInOT.add(op);
+                        opsDiffCheck.put(op_key, op);
+//                        Log.d("TET", String.valueOf(op.getTheatre_number()));
                     }
-                    OperatingTheatreV2 ot = new OperatingTheatreV2(Integer.parseInt(ot_num), 0, operationsInOT);
-                    lstOTs.add(ot);
+
+                    new_schedules.add(operationsInOT);
+//                    OperatingTheatreV2 ot = new OperatingTheatreV2(Integer.parseInt(ot_num), 0, operationsInOT);
+//                    lstOTs.add(ot);
+//                    initSnapshots.add()
                 }
-                finishedCallback.callback(lstOTs);
+                finishedCallback.callback(new_schedules);
+//                finishedCallback.callback(lstOTs);
+                diffCheckCallback.callback(opsDiffCheck);
             }
 
             @Override
@@ -151,6 +369,10 @@ public class Overview extends AppCompatActivity {
             case R.id.show_notified:
                 toggleShowNotified();
                 return true;
+            case R.id.menu_refresh:
+                mSwipeRefreshLayout.setRefreshing(true);
+                refresh();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -170,8 +392,12 @@ public class Overview extends AppCompatActivity {
             editor.apply();
         } else {
             // else show only the theatres notified
-            int [] notifiedOTsArray = getNotifiedOTsArray();
-            lstOTv3 = getNotifiedOTs(notifiedOTsArray);
+//            int[] notifiedOTsArray = getNotifiedOTsArray();
+            lstOTv3 = getNotifiedOTs();
+            if (lstOTv3.size() == 0) {
+                makeSnackbar("No notified theatres", mView, Snackbar.LENGTH_SHORT);
+                return;
+            }
 
             // Not ideal but makes and sets a new Adapter with the new list of theatres to show
             myAdapter = new OTRecyclerViewAdapter(this, lstOTv3);
@@ -185,22 +411,22 @@ public class Overview extends AppCompatActivity {
 
     }
 
-    private int[] getNotifiedOTsArray() {
-        int[] otNotifiedStatus = new int[this.allOTsv3.size()];
-        for (int i = 0; i < this.allOTsv3.size(); i++) {
-            OperatingTheatreV2 ot = allOTsv3.get(i);
-            if (ot.getIsNotified() == 1) {
-                otNotifiedStatus[i] = 1;
-            }
-        }
-        return otNotifiedStatus;
-    }
+//    private int[] getNotifiedOTsArray() {
+//        int[] otNotifiedStatus = new int[this.allOTsv3.size()];
+//        for (int i = 0; i < this.allOTsv3.size(); i++) {
+//            OperatingTheatreV2 ot = allOTsv3.get(i);
+//            if (ot.getIsNotified() == 1) {
+//                otNotifiedStatus[i] = 1;
+//            }
+//        }
+//        return otNotifiedStatus;
+//    }
 
-    private ArrayList<OperatingTheatreV2> getNotifiedOTs(int[] notifiedOTs) {
+    private ArrayList<OperatingTheatreV2> getNotifiedOTs() {
         ArrayList<OperatingTheatreV2> ots = new ArrayList<>();
-        for (int i = 0; i < notifiedOTs.length; i++) {
-            if (notifiedOTs[i] == 1) {
-                ots.add(lstOTv3.get(i));
+        for (int i = 0; i < allOTsv3.size(); i++) {
+            if (allOTsv3.get(i).getIsNotified() == 1) {
+                ots.add(allOTsv3.get(i));
             }
         }
         return ots;
