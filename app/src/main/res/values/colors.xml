@@ -14,4 +14,8 @@
     <color name="pewter">#B9B7BD</color>
     <color name="light_blue">#c1e1ec</color>
     <color name="middle_blue">#72bcd4</color>
+    <color name="stage_blue_curr">#40C4FF</color>
+    <color name="stage_blue_prev">#ABE5FF</color>
+    <color name="stage_orange_curr">#FFB74D</color>
+    <color name="stage_orange_prev">#FFE0B2</color>
 </resources>
