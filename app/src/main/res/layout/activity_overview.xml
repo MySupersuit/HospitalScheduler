@@ -5,14 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F6F6F6"
-    android:padding="8dp"
     tools:context=".Overview"
-    android:id="@+id/overview_linear_layout">
+    android:id="@+id/overview_linear_layout"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/progressBarHolder"
+        android:animateLayoutChanges="true"
+        android:alpha="0.2"
+        android:background="#000">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleLargeInverse"
+            android:indeterminate="true"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/light_blue"/>
+
+    </FrameLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylerview_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="8dp">
 
     </androidx.recyclerview.widget.RecyclerView>
 

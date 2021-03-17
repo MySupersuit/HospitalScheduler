@@ -28,7 +28,7 @@ public class OTInfoFragment extends Fragment {
     private static final String NOTIFIED = "param3";
 
     private int ot_num;
-    private ArrayList<Operation> schedule;
+    private ArrayList<OperationV2> schedule;
     private int isNotified;
 
     private TextView num_tv;
@@ -51,7 +51,7 @@ public class OTInfoFragment extends Fragment {
 //     * @param category_thumb The category thumbnail
 //     * @return A new instance of fragment OTInfoFragment.
      */
-    public static OTInfoFragment newInstance(int number, ArrayList<Operation> schedule, int isNotified) {
+    public static OTInfoFragment newInstance(int number, ArrayList<OperationV2> schedule, int isNotified) {
         OTInfoFragment fragment = new OTInfoFragment();
         Bundle args = new Bundle();
         args.putInt(NUMBER, number);
@@ -89,7 +89,7 @@ public class OTInfoFragment extends Fragment {
         surgeon_tv.setText("Surgeon: " + this.schedule.get(0).getSurgeon());
         num_tv.setText("OT " + String.valueOf(this.ot_num));
         category_tv.setText("Category: " + this.schedule.get(0).getCategory());
-        stage_tv.setText("Stage: "+ String.valueOf(this.schedule.get(0).getStage()));
+        stage_tv.setText("Stage: "+ String.valueOf(this.schedule.get(0).getCurrent_stage()));
         proc_tv.setText("Procedure: " + this.schedule.get(0).getProcedure());
 
         return view;
