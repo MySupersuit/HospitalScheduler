@@ -26,7 +26,7 @@ public class loginActivity extends AppCompatActivity {
 
     //Actual credentials(username, password) used for comparison
     //final = cannot change the value
-    private final String sampleUsername = "surgeon";
+    private final String sampleUsername = "12345";
     private final String samplePassword = "password";
 
     // Boolean to validate the credentials - check if true or false
@@ -98,6 +98,9 @@ public class loginActivity extends AppCompatActivity {
                         Intent toOverview = new Intent(loginActivity.this,Overview.class);
                         //Switch screen
                         startActivity(toOverview);
+                        //Prevent user from going back to the login screen
+                        finish(); //Removes the login activity from the back stack
+
                     }
 
 
