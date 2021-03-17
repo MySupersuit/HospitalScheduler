@@ -176,6 +176,14 @@ public class OperationV2 implements Parcelable {
         this.theatre_number = theatre_number;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     // Parcelable Functions
     public static final Creator<OperationV2> CREATOR = new Creator<OperationV2>() {
         @Override

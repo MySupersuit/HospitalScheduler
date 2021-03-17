@@ -2,40 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/overview_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F6F6F6"
-    tools:context=".Overview"
-    android:id="@+id/overview_linear_layout"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    tools:context=".Overview">
 
-    <FrameLayout
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/progressBarHolder"
+            android:animateLayoutChanges="true"
+            android:alpha="0.2"
+            android:background="#000">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/progressBarStyleLargeInverse"
+                android:indeterminate="true"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/light_blue"/>
+        </FrameLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/progressBarHolder"
-        android:animateLayoutChanges="true"
-        android:alpha="0.2"
-        android:background="#000">
+        android:id="@+id/swipe_refresh_overview">
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleLargeInverse"
-            android:indeterminate="true"
-            android:layout_gravity="center"
-            android:indeterminateTint="@color/light_blue"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recylerview_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp">
 
-    </FrameLayout>
+        </androidx.recyclerview.widget.RecyclerView>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recylerview_id"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>
