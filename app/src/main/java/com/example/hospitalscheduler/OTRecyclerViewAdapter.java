@@ -3,6 +3,7 @@ package com.example.hospitalscheduler;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -27,7 +29,7 @@ import java.util.List;
 public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAdapter.MyViewHolder> {
 
     private Context mContext;
-//    private ArrayList<OperatingTheatre> operatingTheatres; // list of objects going into recycler view
+    //    private ArrayList<OperatingTheatre> operatingTheatres; // list of objects going into recycler view
     private ArrayList<OperatingTheatreV2> operatingTheatresV2;
     private static final int NUM_STAGES = 5;
 
@@ -63,22 +65,25 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
             next_op = ot.getSchedule().get(1);
         }
 
-        holder.ot_num.setText("OT " + String.valueOf(ot.getNumber()));
+        holder.ot_num.setText("OT " + ot.getNumber());
 
         holder.curr_surgeon.setText(curr_op.getSurgeon());
         String curr_colour = categoryToColour(curr_op.getCategory());
         holder.curr_back_colour.setBackgroundColor(Color.parseColor(curr_colour));
         int curr_back_image = categoryToDrawable(curr_op.getCategory());
         holder.curr_back_image.setImageResource(curr_back_image);
-//        holder.curr_stage_time.setText(curr_op.getStartTime());     // NOT RIGHT - new field for time in current stage
-//        holder.curr_stage_num.setText("stage " + curr_op.getStage() + ": ");
+        holder.curr_stage_num.setText("stage " + curr_op.getCurrent_stage());
+        String mins_in_curr_stage = getMinutesSince(curr_op.getCurr_stage_start_time());
+        holder.curr_stage_time.setText(mins_in_curr_stage);
 
         holder.next_surgeon.setText(next_op.getSurgeon());
         String next_colour = categoryToColour(next_op.getCategory());
         holder.next_back_colour.setBackgroundColor(Color.parseColor(next_colour));
         int next_back_image = categoryToDrawable(next_op.getCategory());
         holder.next_back_image.setImageResource(next_back_image);
-//        holder.next_stage_time.setText(next_op.getStartTime()); // NOT RIGHT - new field for time in current stage
+        holder.next_stage_num.setText("stage " + next_op.getCurrent_stage());
+        String mins_in_next_stage = getMinutesSince(next_op.getCurr_stage_start_time());
+        holder.next_stage_time.setText(mins_in_next_stage);
 
         holder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,35 +102,61 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
             @Override
             public void onClick(View v) {
                 if (holder.notify.isChecked()) {
-                    Snackbar snackbar = Snackbar.make(v, "Getting notifications for " + operatingTheatresV2.get(position).getNumber(),
-                    Snackbar.LENGTH_SHORT);
-                    snackbar.show();
-
+                    makeSnackbar("Getting notifications for " + operatingTheatresV2.get(position).getNumber(), v, Snackbar.LENGTH_SHORT);
                     ot.setIsNotified(1);
                 } else {
-                    Snackbar snackbar = Snackbar.make(v, "Not getting notifications for " + operatingTheatresV2.get(position).getNumber(),
-                            Snackbar.LENGTH_SHORT);
-                    snackbar.show();
-
+                    makeSnackbar("Not getting notifications for " + operatingTheatresV2.get(position).getNumber(), v, Snackbar.LENGTH_SHORT);
                     ot.setIsNotified(0);
                 }
-
             }
         });
 
         // Turn completed and current stages blue
         TextView[] stages = {holder.stage1, holder.stage2,
                 holder.stage3, holder.stage4, holder.stage5};
-
-        for (int i = 0; i < curr_op.getCurrent_stage() ; i++) {
-            stages[i].setBackgroundColor(Color.parseColor("#40C4FF"));
-        }
+        setStagesColour(stages, curr_op, next_op);
 
         // Set notification bell
         if (ot.getIsNotified() == 1) {
             holder.notify.setChecked(true);
         }
 
+    }
+
+    // Assume more than 999 minutes is error
+    private String getMinutesSince(long timestamp) {
+        long curr_time = System.currentTimeMillis() / 1000L;
+        long difference = curr_time - timestamp;
+        int mins = (int) Math.ceil((double)difference/60);
+        Log.d("DIFF", String.valueOf(difference));
+        Log.d("MINS", String.valueOf(mins));
+        return (mins > 999) ? "0" : String.valueOf(mins);
+    }
+
+    private void setStagesColour(TextView[] stages, OperationV2 curr_op, OperationV2 next_op) {
+        int blue_curr = ContextCompat.getColor(mContext, R.color.stage_blue_curr);
+        int blue_prev = ContextCompat.getColor(mContext, R.color.stage_blue_prev);
+        int light_blue = ContextCompat.getColor(mContext, R.color.light_blue);
+        int orange_curr = ContextCompat.getColor(mContext, R.color.stage_orange_curr);
+        int orange_prev = ContextCompat.getColor(mContext, R.color.stage_orange_prev);
+
+        // Current Operation first
+        if (curr_op.getCurrent_stage() > 0) {
+            stages[curr_op.getCurrent_stage() - 1].setBackgroundColor(blue_curr);
+
+            for (int i = curr_op.getCurrent_stage() - 2; i >= 0; i--) {
+                stages[i].setBackgroundColor(light_blue);
+            }
+        }
+
+        // Next Operation second
+        if (next_op.getCurrent_stage() > 0) {
+            stages[next_op.getCurrent_stage() - 1].setBackgroundColor(orange_curr);
+
+            for (int i = next_op.getCurrent_stage() - 2; i >= 0; i--) {
+                stages[i].setBackgroundColor(orange_prev);
+            }
+        }
     }
 
     @Override

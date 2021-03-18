@@ -55,7 +55,8 @@ public final class Utilites {
             case UROLOGY:
                 return "#98FB98";
             default:
-                return "errorInUtilities";
+                return "#FFFFFF";
+//                return "errorInUtilities";
         }
     }
 
