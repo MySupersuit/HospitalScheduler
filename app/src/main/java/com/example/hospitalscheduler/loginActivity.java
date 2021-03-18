@@ -83,11 +83,17 @@ public class loginActivity extends AppCompatActivity {
                         //Update the screen count of attempts with current (reduced) count
                         numberOfAttempts.setText("Number of attempts left: "+countAttempts);
 
+
                         //Once no attempts are left
-                        if(countAttempts == 0)
-                        {
+                        if(countAttempts == 0) {
                             //Disable the login button
                             loginButton.setEnabled(false);
+                        }else{ //Counts are not equal to 0
+                            //Security Message 1 - invalid username and password
+                            //Length = short
+                            Toast toast_attemptsNotZero = Toast.makeText(loginActivity.this,"Incorrect username/password/both. Please try again",Toast.LENGTH_SHORT);
+                            //Display the message
+                            toast_attemptsNotZero.show();
                         }
                     }
                     //If the boolean - correct is true
