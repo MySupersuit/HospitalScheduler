@@ -65,6 +65,15 @@ public final class Utilites {
         snackbar.show();
     }
 
+    public static String stringArrayToString(ArrayList<String> strings) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : strings) {
+            sb.append(s);
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
+
     public static void writeInitDataDB() {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://hospitalscheduler-41566-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference ref = database.getReference("operations");

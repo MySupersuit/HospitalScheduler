@@ -3,13 +3,28 @@ package com.example.hospitalscheduler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,7 +33,9 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +44,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,9 +53,10 @@ import static com.example.hospitalscheduler.Utilites.*;
 public class Overview extends AppCompatActivity {
 
     boolean showOnlyNotified;
-    ArrayList<OperatingTheatreV2> lstOTv3;
-    ArrayList<OperatingTheatreV2> allOTsv3;
-    ArrayList<ArrayList<OperationV2>> allOps;
+
+    ArrayList<OperatingTheatreV2> rv_OTlist; // list to go into RecyclerView
+    ArrayList<OperatingTheatreV2> allOTs; // always has all OTs
+
     RecyclerView my_rv;
     OTRecyclerViewAdapter myAdapter;
     SharedPreferences sharedPref;
@@ -51,6 +70,8 @@ public class Overview extends AppCompatActivity {
     private HashMap<String, OperationV2> opsDiffCheck;
     private HashMap<DatabaseReference, ChildEventListener> mListenerMap;
 
+    ObjectAnimator animator;
+
     Context mContext;
     View mView;
 
@@ -58,11 +79,14 @@ public class Overview extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+        createNotificationChannel(); // DO AS SOON AS APP STARTS
 
         this.showOnlyNotified = false;
         this.mListenerMap = new HashMap<>();
         this.opsDiffCheck = new HashMap<>();
-        this.allOps = new ArrayList<>();
+        this.allOTs = new ArrayList<>();
+        this.rv_OTlist = new ArrayList<>();
+
         my_rv = (RecyclerView) findViewById(R.id.recylerview_id);
         my_rv.setLayoutManager(new GridLayoutManager(this, 1));
         mContext = this;
@@ -89,10 +113,14 @@ public class Overview extends AppCompatActivity {
                         ArrayList<OperatingTheatreV2> new_ots = new ArrayList<>();
                         for (int i = 0; i < data.size(); i++) {
                             new_ots.add(new OperatingTheatreV2(i + 1, 0, data.get(i)));
+                            // TODO isNotified shouldn't automatically be 0 on open?
+                            // TODO maybe read from SharedPreferences
                         }
-                        lstOTv3 = new_ots;
-                        allOTsv3 = new_ots;
-                        myAdapter = new OTRecyclerViewAdapter(mContext, allOTsv3);
+                        // Separate copies of lists
+                        allOTs = new ArrayList<>(new_ots);
+                        rv_OTlist = new ArrayList<>(new_ots);
+                        Log.d("ChildCount", String.valueOf(my_rv.getChildCount()));
+                        myAdapter = new OTRecyclerViewAdapter(mContext, rv_OTlist);
                         my_rv.setAdapter(myAdapter);
                         spinnerOff();
                     }
@@ -110,7 +138,6 @@ public class Overview extends AppCompatActivity {
                 new SimpleCallback<HashMap<DatabaseReference, ChildEventListener>>() {
                     @Override
                     public void callback(HashMap<DatabaseReference, ChildEventListener> data) {
-//                        Log.d("HASHCALL", data.toString());
                         mListenerMap = data;
                     }
                 },
@@ -126,27 +153,140 @@ public class Overview extends AppCompatActivity {
         sharedPref = getPreferences(Context.MODE_PRIVATE);
     }
 
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "test_channel";
+            String description = "test_description";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(
+                    "TEST_CHANNEL_ID", name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    // TODO Notifications when app is closed = FCM
     private void handleDataChange(DataSnapshot ds) {
         // ds is the child node that has changed
         // ie. the OperationV2 object that has changed
         // Still need to find what has changed and act accordingly
 
+        // Get new Operation
         OperationV2 op = ds.getValue(OperationV2.class);
+        // Get updated theatre
+        int updatedTheatre = op.getTheatre_number();
         String updateKey = op.getId();
+        // Get old Operation by key
         OperationV2 oldOp = this.opsDiffCheck.get(updateKey);
         // opsDiffCheck is a Key-Value Map
         // {op_id: OperationV2}
 
-//        // Outline OT in Yellow?
-//        Log.d("OT", String.valueOf(op.getTheatre_number()));
-
-        Log.d("OPCHANGE", op.getTheatre_number() + " changed");
-        Log.d("NEWOP", String.valueOf(op.getCurrent_stage()));
-        Log.d("OLDOP", String.valueOf(oldOp.getCurrent_stage()));
+        // Update the old operation
         this.opsDiffCheck.put(updateKey, op);
 
-        makeSnackbar("Refresh for new data!", mView, Snackbar.LENGTH_LONG);
+        // Get the schedule of operations from theatre
+
+        ArrayList<OperationV2> sched = allOTs.get(updatedTheatre-1).getSchedule();
+        // index of old operation in schedule
+        int old_op_index = sched.indexOf(oldOp);
+        // replace it with the new operation
+
+        sched.set(old_op_index, op);
+        OperatingTheatreV2 op1 = allOTs.get(updatedTheatre-1);
+        op1.setSchedule(sched);
+        allOTs.set(updatedTheatre-1, op1);
+
+        if (showOnlyNotified) {
+             ArrayList<OperatingTheatreV2> to_show = getNotifiedOTs();
+             rv_OTlist.clear();
+             rv_OTlist.addAll(to_show);
+        } else {
+            ArrayList<OperatingTheatreV2> to_show = new ArrayList<>(allOTs);
+            
+            rv_OTlist.clear();
+            rv_OTlist.addAll(to_show);
+        }
+
+        myAdapter.notifyDataSetChanged();
+
+//        makeSnackbar("Refresh for new data!", mView, Snackbar.LENGTH_LONG);
+
+        // if haven't asked for updates then don't send notification
+        if (allOTs.get(updatedTheatre-1).getIsNotified() == 0) {
+//            makeSnackbar("Refresh for new data!", mView, Snackbar.LENGTH_LONG);
+            return;
+        }
+
+        // Generating notifications
+
+        ArrayList<String> updates = generateMessages(op, oldOp);
+        String updateString = stringArrayToString(updates);
+        String titleString = "OT " + op.getTheatre_number();
+
+        // SEND notification if notified of changed OT
+        Notification.Builder builder = new Notification.Builder(
+                this, "TEST_CHANNEL_ID")
+                .setSmallIcon(R.drawable.clock_icon)
+                .setContentTitle(titleString)
+                .setContentText(updateString);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        int notificationId = 1;
+        notificationManager.notify(notificationId, builder.build());
+        // Outline OT in Yellow?
+        // find changed OT in lstOTv3
+
+//        for (int i = 0; i < lstOTv3.size(); i++) {
+//            if (op.getTheatre_number() == lstOTv3.get(i).getNumber()) {
+//                MaterialCardView cv = (MaterialCardView) my_rv.getChildAt(i);
+//                cv.notify();
+////                cv.setStrokeWidth(30);
+////                animate(cv); // figure out animation
+//                break;
+//
+//            }
+//        }
     }
+
+    private OperatingTheatreV2 getTheatreWithNumber(ArrayList<OperatingTheatreV2> ots, int number) {
+        for (int i = 0; i < ots.size(); i++) {
+            if (ots.get(i).getNumber() == number) {
+                return ots.get(i);
+            }
+        }
+        return null;
+    }
+
+    private ArrayList<String> generateMessages(OperationV2 newOp, OperationV2 oldOp) {
+        ArrayList<String> messages = new ArrayList<>();
+        if (!(newOp.getCurrent_stage() == oldOp.getCurrent_stage())) {
+            messages.add("Moved from stage " + oldOp.getCurrent_stage() + " to " + newOp.getCurrent_stage());
+        }
+        if (!(newOp.getIsCovid() == oldOp.getIsCovid())) {
+            messages.add((newOp.getIsCovid() == 1) ? "Has COVID" : "No longer has COVID");
+        }
+        if (!(newOp.getIsDelayed() == oldOp.getIsDelayed())) {
+            messages.add((newOp.getIsDelayed() == 1) ? "Operation Delayed" : "Operation no longer delayed");
+        }
+        return messages;
+    }
+
+
+    private void animate(MaterialCardView cv) {
+
+        animator = ObjectAnimator.ofArgb(
+                cv, "strokeColor",
+                Color.parseColor("#00FFEA00"),
+                Color.parseColor("#FFFFEA00")
+        );
+        animator.setDuration(1000);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+
+        animator.start();
+    }
+
 
     // Called on refresh of data
     // Doesn't create new OperatingTheatre Objects
@@ -161,23 +301,26 @@ public class Overview extends AppCompatActivity {
                         Log.d("DATA", "Data callback called");
                         ArrayList<OperatingTheatreV2> new_ots = new ArrayList<>();
                         for (int i = 0; i < data.size(); i++) {
-                            allOTsv3.get(i).setSchedule(data.get(i));
-                            Log.d("isNotified", String.valueOf(allOTsv3.get(i).getIsNotified()));
+                            allOTs.get(i).setSchedule(data.get(i));
                         }
 
                         if (showOnlyNotified) {
-                            lstOTv3 = getNotifiedOTs();
-                            Log.d("SZE", String.valueOf(lstOTv3.size()));
-                            if (lstOTv3.size() > 0) {
-                                myAdapter = new OTRecyclerViewAdapter(mContext, lstOTv3);
-                            } else {
-                                myAdapter = new OTRecyclerViewAdapter(mContext, allOTsv3);
+                            ArrayList<OperatingTheatreV2> to_show = getNotifiedOTs();
+
+                            if (to_show.size() > 0) {
+                                rv_OTlist.clear();
+                                rv_OTlist.addAll(to_show);
+                                myAdapter.notifyDataSetChanged();
                             }
+
                         } else {
-                            myAdapter = new OTRecyclerViewAdapter(mContext, allOTsv3);
+                            ArrayList<OperatingTheatreV2> to_show = new ArrayList<>(allOTs);
+                            
+                            rv_OTlist.clear();
+                            rv_OTlist.addAll(to_show);
+                            myAdapter.notifyDataSetChanged();
                         }
 
-                        my_rv.setAdapter(myAdapter);
                         spinnerOff();
                     }
                 },
@@ -195,7 +338,6 @@ public class Overview extends AppCompatActivity {
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://hospitalscheduler-41566-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference ref = db.getReference("operations");
 
-
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -210,6 +352,7 @@ public class Overview extends AppCompatActivity {
                 for (String ot_num : ot_nums) { // 1,2,3,4,5
                     DataSnapshot ot_num_ds = snapshot.child(ot_num);
 
+                    // TODO handle more than just child changed
                     ChildEventListener listener = new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -218,7 +361,6 @@ public class Overview extends AppCompatActivity {
 
                         @Override
                         public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                            Log.d("CHILD", String.valueOf(ot_num) + " changed");
                             listenerCallback.callback(snapshot);
 
                         }
@@ -254,7 +396,6 @@ public class Overview extends AppCompatActivity {
             }
         });
     }
-
 
     // for initial read and refreshing
     public static void singleDBRead(@NonNull SimpleCallback<ArrayList<ArrayList<OperationV2>>> finishedCallback,
@@ -343,51 +484,54 @@ public class Overview extends AppCompatActivity {
         Log.d("TOGSTATE", String.valueOf(this.showOnlyNotified));
 //        if currently showing only notified then show all
         if (this.showOnlyNotified) {
-            lstOTv3 = this.allOTsv3;
-            myAdapter = new OTRecyclerViewAdapter(this, lstOTv3);
-            my_rv.setAdapter(myAdapter);
             this.showOnlyNotified = false;
-
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(getString(R.string.show_notified_key), this.showOnlyNotified);
             editor.apply();
+
+            ArrayList<OperatingTheatreV2> to_show = new ArrayList<>(allOTs);
+            
+            rv_OTlist.clear();
+            rv_OTlist.addAll(to_show);
+            myAdapter.notifyDataSetChanged();
+//            lstOTv3 = this.allOTsv3;
+//            myAdapter = new OTRecyclerViewAdapter(this, allOTsv3);
+//            my_rv.setAdapter(myAdapter);
+
+
+
         } else {
+
             // else show only the theatres notified
 //            int[] notifiedOTsArray = getNotifiedOTsArray();
-            lstOTv3 = getNotifiedOTs();
-            if (lstOTv3.size() == 0) {
+            ArrayList<OperatingTheatreV2> to_show = getNotifiedOTs();
+            if (to_show.size() == 0) {
                 makeSnackbar("No notified theatres", mView, Snackbar.LENGTH_SHORT);
                 return;
             }
-
-            // Not ideal but makes and sets a new Adapter with the new list of theatres to show
-            myAdapter = new OTRecyclerViewAdapter(this, lstOTv3);
-            my_rv.setAdapter(myAdapter);
             this.showOnlyNotified = true;
-
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean(getString(R.string.show_notified_key), this.showOnlyNotified);
             editor.apply();
+
+            rv_OTlist.clear();
+            rv_OTlist.addAll(to_show);
+            myAdapter.notifyDataSetChanged();
+
+//            // Not ideal but makes and sets a new Adapter with the new list of theatres to show
+//            myAdapter = new OTRecyclerViewAdapter(this, lstOTv3);
+//            my_rv.setAdapter(myAdapter);
+
+
         }
 
     }
 
-//    private int[] getNotifiedOTsArray() {
-//        int[] otNotifiedStatus = new int[this.allOTsv3.size()];
-//        for (int i = 0; i < this.allOTsv3.size(); i++) {
-//            OperatingTheatreV2 ot = allOTsv3.get(i);
-//            if (ot.getIsNotified() == 1) {
-//                otNotifiedStatus[i] = 1;
-//            }
-//        }
-//        return otNotifiedStatus;
-//    }
-
     private ArrayList<OperatingTheatreV2> getNotifiedOTs() {
         ArrayList<OperatingTheatreV2> ots = new ArrayList<>();
-        for (int i = 0; i < allOTsv3.size(); i++) {
-            if (allOTsv3.get(i).getIsNotified() == 1) {
-                ots.add(allOTsv3.get(i));
+        for (int i = 0; i < allOTs.size(); i++) {
+            if (allOTs.get(i).getIsNotified() == 1) {
+                ots.add(allOTs.get(i));
             }
         }
         return ots;
