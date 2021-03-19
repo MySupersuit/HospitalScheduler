@@ -7,4 +7,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="show_notified_key">notified_key</string>
     <string name="menu_refresh">Refresh</string>
+    <string name="is_notified_pref">is_notified_pref</string>
 </resources>

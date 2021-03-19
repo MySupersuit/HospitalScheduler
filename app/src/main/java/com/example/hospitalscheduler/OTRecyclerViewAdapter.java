@@ -1,17 +1,15 @@
-    package com.example.hospitalscheduler;
+package com.example.hospitalscheduler;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -19,13 +17,16 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONObject;
 
 import static com.example.hospitalscheduler.Utilites.*;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAdapter.MyViewHolder> {
 
@@ -33,10 +34,13 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
     //    private ArrayList<OperatingTheatre> operatingTheatres; // list of objects going into recycler view
     private ArrayList<OperatingTheatreV2> operatingTheatresV2;
     private static final int NUM_STAGES = 5;
+    private OverviewOnClickListener ovcl;
 
-    public OTRecyclerViewAdapter(Context mContext, ArrayList<OperatingTheatreV2> operatingTheatresV2) {
+    public OTRecyclerViewAdapter(Context mContext, ArrayList<OperatingTheatreV2> operatingTheatresV2, OverviewOnClickListener c) {
         this.mContext = mContext;
         this.operatingTheatresV2 = operatingTheatresV2;
+        this.ovcl = c;
+
     }
 
     @NonNull
@@ -44,9 +48,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         LayoutInflater mInflator = LayoutInflater.from(mContext);
-//        view = mInflator.inflate(R.layout.cardview_ot, parent, false);
-//        view = mInflator.inflate(R.layout.cardview_ot_v2, parent, false);
-//        view = mInflator.inflate(R.layout.cardview_ot_v3, parent, false);
+
         view = mInflator.inflate(R.layout.cardview_ot_v4, parent, false);
         return new MyViewHolder(view);
     }
@@ -90,8 +92,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
                 intent.putExtra("Number", ot.getNumber());
                 intent.putExtra("Notified", ot.getIsNotified());
 
-                Log.d("STOP", v.toString());
-                v.clearAnimation();
+                ovcl.stopAnimCallback(ot.getNumber());
 
                 mContext.startActivity(intent);
             }
@@ -101,10 +102,26 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
             @Override
             public void onClick(View v) {
                 if (holder.notify.isChecked()) {
-                    makeSnackbar("Getting notifications for " + operatingTheatresV2.get(position).getNumber(), v, Snackbar.LENGTH_SHORT);
+                    makeSnackbar("Getting notifications for " + operatingTheatresV2.get(position).getNumber(),
+                            v, Snackbar.LENGTH_SHORT);
+
+                    HashMap<String, Integer> not = (HashMap<String, Integer>) loadMap();
+                    not.put(String.valueOf(ot.getNumber()), 1);
+                    Log.d("MAP", not.toString());
+                    saveMap(not);
+                    Log.d("SAVE", "saved apparently");
+
                     ot.setIsNotified(1);
                 } else {
-                    makeSnackbar("Not getting notifications for " + operatingTheatresV2.get(position).getNumber(), v, Snackbar.LENGTH_SHORT);
+                    makeSnackbar("Not getting notifications for " + operatingTheatresV2.get(position).getNumber(),
+                            v, Snackbar.LENGTH_SHORT);
+
+                    HashMap<String, Integer> not = (HashMap<String, Integer>) loadMap();
+                    not.put(String.valueOf(ot.getNumber()), 0);
+                    Log.d("MAP", not.toString());
+                    saveMap(not);
+                    Log.d("SAVE", "saved apparently");
+
                     ot.setIsNotified(0);
                 }
             }
@@ -113,7 +130,6 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         // Turn completed and current stages blue
         TextView[] stages = {holder.stage1, holder.stage2,
                 holder.stage3, holder.stage4, holder.stage5};
-        Log.d("SetStage", String.valueOf(curr_op.getTheatre_number()));
         setStagesColour(stages, curr_op, next_op);
 
         // Set notification bell
@@ -127,7 +143,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
     private String getMinutesSince(long timestamp) {
         long curr_time = System.currentTimeMillis() / 1000L;
         long difference = curr_time - timestamp;
-        int mins = (int) Math.ceil((double)difference/60);
+        int mins = (int) Math.ceil((double) difference / 60);
         return (mins > 999) ? "0" : String.valueOf(mins);
     }
 
@@ -161,10 +177,42 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         // others are from last stage to current highest stage
         int highest_stage = Math.max(curr_op.getCurrent_stage(),
                 next_op.getCurrent_stage());
-        Log.d("IMP", String.valueOf(highest_stage));
-        for (int i = NUM_STAGES-1; i >= highest_stage; i--) {
+        for (int i = NUM_STAGES - 1; i >= highest_stage; i--) {
             stages[i].setBackgroundColor(white);
         }
+    }
+
+    private void saveMap(Map<String, Integer> inputMap) {
+        SharedPreferences pSharedPref = mContext.getSharedPreferences("is_notified_pref", Context.MODE_PRIVATE);
+        if (pSharedPref != null) {
+            JSONObject jsonObject = new JSONObject(inputMap);
+            String jsonString = jsonObject.toString();
+            SharedPreferences.Editor editor = pSharedPref.edit();
+            editor.remove("My_map").apply();
+            editor.putString("My_map", jsonString);
+            editor.apply();
+        }
+    }
+
+    private Map<String, Integer> loadMap() {
+        Map<String, Integer> outputMap = new HashMap<>();
+        SharedPreferences pSharedPref = mContext.getSharedPreferences(
+                "is_notified_pref", Context.MODE_PRIVATE);
+        try {
+            if (pSharedPref != null) {
+                String jsonString = pSharedPref.getString("My_map", (new JSONObject()).toString());
+                JSONObject jsonObject = new JSONObject(jsonString);
+                Iterator<String> keysItr = jsonObject.keys();
+                while (keysItr.hasNext()) {
+                    String key = keysItr.next();
+                    int value = (Integer) jsonObject.get(key);
+                    outputMap.put(key, value);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return outputMap;
     }
 
     @Override

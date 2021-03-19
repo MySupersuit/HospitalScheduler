@@ -44,9 +44,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import static com.example.hospitalscheduler.Utilites.*;
 
@@ -66,11 +70,13 @@ public class Overview extends AppCompatActivity {
     FrameLayout progressBarHolder;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    ArrayList<ObjectAnimator> animators; // animator objs for each cardview
+
     // Keeps a most recent list of ops to check against when updates come in
     private HashMap<String, OperationV2> opsDiffCheck;
     private HashMap<DatabaseReference, ChildEventListener> mListenerMap;
 
-    ObjectAnimator animator;
+    private HashMap<String, Integer> isNotifiedMap;
 
     Context mContext;
     View mView;
@@ -80,16 +86,21 @@ public class Overview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
         createNotificationChannel(); // DO AS SOON AS APP STARTS
+        mContext = this;
+
+        sharedPref = mContext.getSharedPreferences(
+                getString(R.string.is_notified_pref), Context.MODE_PRIVATE);
+        isNotifiedMap = new HashMap<>();
 
         this.showOnlyNotified = false;
         this.mListenerMap = new HashMap<>();
         this.opsDiffCheck = new HashMap<>();
         this.allOTs = new ArrayList<>();
         this.rv_OTlist = new ArrayList<>();
+        this.animators = new ArrayList<>();
 
         my_rv = (RecyclerView) findViewById(R.id.recylerview_id);
         my_rv.setLayoutManager(new GridLayoutManager(this, 1));
-        mContext = this;
         mView = (LinearLayout) findViewById(R.id.overview_linear_layout);
 
         progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
@@ -111,16 +122,30 @@ public class Overview extends AppCompatActivity {
                         mSwipeRefreshLayout.setRefreshing(false);
                         Log.d("DATA", "Data callback called");
                         ArrayList<OperatingTheatreV2> new_ots = new ArrayList<>();
+
+                        // get shared prefs here
+                        isNotifiedMap = (HashMap<String, Integer>) loadMap();
+                        Log.d("SIZE", String.valueOf(isNotifiedMap.size()));
+
+                        // if in shared prefs then use that value as isNotified
                         for (int i = 0; i < data.size(); i++) {
-                            new_ots.add(new OperatingTheatreV2(i + 1, 0, data.get(i)));
-                            // TODO isNotified shouldn't automatically be 0 on open?
-                            // TODO maybe read from SharedPreferences
+                            if (isNotifiedMap.containsKey(String.valueOf(i + 1))) {
+                                new_ots.add(new OperatingTheatreV2(i + 1, isNotifiedMap.get(String.valueOf(i + 1)), data.get(i)));
+                            } else {
+                                new_ots.add(new OperatingTheatreV2(i + 1, 0, data.get(i)));
+                            }
+
+                            animators.add(new ObjectAnimator());
                         }
                         // Separate copies of lists
                         allOTs = new ArrayList<>(new_ots);
                         rv_OTlist = new ArrayList<>(new_ots);
                         Log.d("ChildCount", String.valueOf(my_rv.getChildCount()));
-                        myAdapter = new OTRecyclerViewAdapter(mContext, rv_OTlist);
+                        myAdapter = new OTRecyclerViewAdapter(mContext, rv_OTlist, (ot_num) -> {
+                            ObjectAnimator animator = animators.get(ot_num - 1);
+                            stopAnimation(animator);
+
+                        });
                         my_rv.setAdapter(myAdapter);
                         spinnerOff();
                     }
@@ -148,9 +173,6 @@ public class Overview extends AppCompatActivity {
                         handleDataChange(ds);
                     }
                 });
-
-        // TODO Is notified not persisting on reload
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
     }
 
     private void createNotificationChannel() {
@@ -187,23 +209,22 @@ public class Overview extends AppCompatActivity {
 
         // Get the schedule of operations from theatre
 
-        ArrayList<OperationV2> sched = allOTs.get(updatedTheatre-1).getSchedule();
+        ArrayList<OperationV2> sched = allOTs.get(updatedTheatre - 1).getSchedule();
         // index of old operation in schedule
         int old_op_index = sched.indexOf(oldOp);
         // replace it with the new operation
 
         sched.set(old_op_index, op);
-        OperatingTheatreV2 op1 = allOTs.get(updatedTheatre-1);
+        OperatingTheatreV2 op1 = allOTs.get(updatedTheatre - 1);
         op1.setSchedule(sched);
-        allOTs.set(updatedTheatre-1, op1);
+        allOTs.set(updatedTheatre - 1, op1);
 
         if (showOnlyNotified) {
-             ArrayList<OperatingTheatreV2> to_show = getNotifiedOTs();
-             rv_OTlist.clear();
-             rv_OTlist.addAll(to_show);
+            ArrayList<OperatingTheatreV2> to_show = getNotifiedOTs();
+            rv_OTlist.clear();
+            rv_OTlist.addAll(to_show);
         } else {
             ArrayList<OperatingTheatreV2> to_show = new ArrayList<>(allOTs);
-            
             rv_OTlist.clear();
             rv_OTlist.addAll(to_show);
         }
@@ -213,7 +234,7 @@ public class Overview extends AppCompatActivity {
 //        makeSnackbar("Refresh for new data!", mView, Snackbar.LENGTH_LONG);
 
         // if haven't asked for updates then don't send notification
-        if (allOTs.get(updatedTheatre-1).getIsNotified() == 0) {
+        if (allOTs.get(updatedTheatre - 1).getIsNotified() == 0) {
 //            makeSnackbar("Refresh for new data!", mView, Snackbar.LENGTH_LONG);
             return;
         }
@@ -237,16 +258,16 @@ public class Overview extends AppCompatActivity {
         // Outline OT in Yellow?
         // find changed OT in lstOTv3
 
-//        for (int i = 0; i < lstOTv3.size(); i++) {
-//            if (op.getTheatre_number() == lstOTv3.get(i).getNumber()) {
-//                MaterialCardView cv = (MaterialCardView) my_rv.getChildAt(i);
-//                cv.notify();
-////                cv.setStrokeWidth(30);
-////                animate(cv); // figure out animation
-//                break;
-//
-//            }
-//        }
+        for (int i = 0; i < rv_OTlist.size(); i++) {
+            if (oldOp.getTheatre_number() == rv_OTlist.get(i).getNumber()) {
+                Log.d("TET", String.valueOf(op.getTheatre_number()));
+                MaterialCardView cv = (MaterialCardView) my_rv.getChildAt(i);
+//                cv.setStrokeWidth(30);
+                animate(cv, op.getTheatre_number()); // figure out animation
+                break;
+
+            }
+        }
     }
 
     private OperatingTheatreV2 getTheatreWithNumber(ArrayList<OperatingTheatreV2> ots, int number) {
@@ -272,10 +293,11 @@ public class Overview extends AppCompatActivity {
         return messages;
     }
 
+    private void animate(MaterialCardView cv, int ot_num) {
 
-    private void animate(MaterialCardView cv) {
+        stopAnimation(animators.get(ot_num - 1));
 
-        animator = ObjectAnimator.ofArgb(
+        ObjectAnimator animator = ObjectAnimator.ofArgb(
                 cv, "strokeColor",
                 Color.parseColor("#00FFEA00"),
                 Color.parseColor("#FFFFEA00")
@@ -285,6 +307,7 @@ public class Overview extends AppCompatActivity {
         animator.setRepeatMode(ValueAnimator.REVERSE);
 
         animator.start();
+        animators.set(ot_num - 1, animator);
     }
 
 
@@ -315,7 +338,7 @@ public class Overview extends AppCompatActivity {
 
                         } else {
                             ArrayList<OperatingTheatreV2> to_show = new ArrayList<>(allOTs);
-                            
+
                             rv_OTlist.clear();
                             rv_OTlist.addAll(to_show);
                             myAdapter.notifyDataSetChanged();
@@ -490,18 +513,12 @@ public class Overview extends AppCompatActivity {
             editor.apply();
 
             ArrayList<OperatingTheatreV2> to_show = new ArrayList<>(allOTs);
-            
+
             rv_OTlist.clear();
             rv_OTlist.addAll(to_show);
             myAdapter.notifyDataSetChanged();
-//            lstOTv3 = this.allOTsv3;
-//            myAdapter = new OTRecyclerViewAdapter(this, allOTsv3);
-//            my_rv.setAdapter(myAdapter);
-
-
 
         } else {
-
             // else show only the theatres notified
 //            int[] notifiedOTsArray = getNotifiedOTsArray();
             ArrayList<OperatingTheatreV2> to_show = getNotifiedOTs();
@@ -518,11 +535,6 @@ public class Overview extends AppCompatActivity {
             rv_OTlist.addAll(to_show);
             myAdapter.notifyDataSetChanged();
 
-//            // Not ideal but makes and sets a new Adapter with the new list of theatres to show
-//            myAdapter = new OTRecyclerViewAdapter(this, lstOTv3);
-//            my_rv.setAdapter(myAdapter);
-
-
         }
 
     }
@@ -536,4 +548,47 @@ public class Overview extends AppCompatActivity {
         }
         return ots;
     }
+
+    private void stopAnimation(ObjectAnimator animator) {
+        if (animator.getValues() != null && animator.getValues().length > 0) {
+            animator.cancel();
+            animator.setDuration(0);
+            animator.reverse();
+        }
+    }
+
+    private void saveMap(Map<String, Integer> inputMap) {
+        SharedPreferences pSharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.is_notified_pref), Context.MODE_PRIVATE);
+        if (pSharedPref != null) {
+            JSONObject jsonObject = new JSONObject(inputMap);
+            String jsonString = jsonObject.toString();
+            SharedPreferences.Editor editor = pSharedPref.edit();
+            editor.remove("My_map").apply();
+            editor.putString("My_map", jsonString);
+            editor.apply();
+        }
+    }
+
+    private Map<String, Integer> loadMap() {
+        Map<String, Integer> outputMap = new HashMap<>();
+        SharedPreferences pSharedPref = getApplicationContext().getSharedPreferences(
+                getString(R.string.is_notified_pref), Context.MODE_PRIVATE);
+        try {
+            if (pSharedPref != null) {
+                String jsonString = pSharedPref.getString("My_map", (new JSONObject()).toString());
+                JSONObject jsonObject = new JSONObject(jsonString);
+                Iterator<String> keysItr = jsonObject.keys();
+                while (keysItr.hasNext()) {
+                    String key = keysItr.next();
+                    int value = (Integer) jsonObject.get(key);
+                    outputMap.put(key, value);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return outputMap;
+    }
+
 }
