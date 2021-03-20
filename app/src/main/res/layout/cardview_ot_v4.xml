@@ -11,7 +11,9 @@
     android:elevation="50dp"
     android:foreground="?android:attr/selectableItemBackground"
     cardview:cardCornerRadius="8dp"
-    cardview:cardUseCompatPadding="true">
+    cardview:cardUseCompatPadding="true"
+    cardview:strokeWidth="10dp"
+    cardview:strokeColor="@color/notify_yellow_start">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -57,7 +59,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:gravity="center"
-                    android:text="OT X"
+                    android:text="OT 0"
                     android:textColor="@color/black"
                     android:textSize="30sp"
                     android:textStyle="bold"

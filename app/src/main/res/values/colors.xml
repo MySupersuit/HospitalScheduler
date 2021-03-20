@@ -18,4 +18,5 @@
     <color name="stage_blue_prev">#ABE5FF</color>
     <color name="stage_orange_curr">#FFB74D</color>
     <color name="stage_orange_prev">#FFE0B2</color>
+    <color name="notify_yellow_start">#00FFEA00</color>
 </resources>

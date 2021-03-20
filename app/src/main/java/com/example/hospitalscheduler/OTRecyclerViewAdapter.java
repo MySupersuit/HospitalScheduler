@@ -1,4 +1,4 @@
-package com.example.hospitalscheduler;
+    package com.example.hospitalscheduler;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 
 import static com.example.hospitalscheduler.Utilites.*;
@@ -32,11 +33,6 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
     //    private ArrayList<OperatingTheatre> operatingTheatres; // list of objects going into recycler view
     private ArrayList<OperatingTheatreV2> operatingTheatresV2;
     private static final int NUM_STAGES = 5;
-
-//    public OTRecyclerViewAdapter(Context mContext, ArrayList<OperatingTheatre> operatingTheatres) {
-////        this.mContext = mContext;
-////        this.operatingTheatres = operatingTheatres;
-////    }
 
     public OTRecyclerViewAdapter(Context mContext, ArrayList<OperatingTheatreV2> operatingTheatresV2) {
         this.mContext = mContext;
@@ -94,6 +90,9 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
                 intent.putExtra("Number", ot.getNumber());
                 intent.putExtra("Notified", ot.getIsNotified());
 
+                Log.d("STOP", v.toString());
+                v.clearAnimation();
+
                 mContext.startActivity(intent);
             }
         });
@@ -114,6 +113,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         // Turn completed and current stages blue
         TextView[] stages = {holder.stage1, holder.stage2,
                 holder.stage3, holder.stage4, holder.stage5};
+        Log.d("SetStage", String.valueOf(curr_op.getTheatre_number()));
         setStagesColour(stages, curr_op, next_op);
 
         // Set notification bell
@@ -128,8 +128,6 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         long curr_time = System.currentTimeMillis() / 1000L;
         long difference = curr_time - timestamp;
         int mins = (int) Math.ceil((double)difference/60);
-        Log.d("DIFF", String.valueOf(difference));
-        Log.d("MINS", String.valueOf(mins));
         return (mins > 999) ? "0" : String.valueOf(mins);
     }
 
@@ -139,6 +137,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         int light_blue = ContextCompat.getColor(mContext, R.color.light_blue);
         int orange_curr = ContextCompat.getColor(mContext, R.color.stage_orange_curr);
         int orange_prev = ContextCompat.getColor(mContext, R.color.stage_orange_prev);
+        int white = ContextCompat.getColor(mContext, R.color.white);
 
         // Current Operation first
         if (curr_op.getCurrent_stage() > 0) {
@@ -156,6 +155,15 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
             for (int i = next_op.getCurrent_stage() - 2; i >= 0; i--) {
                 stages[i].setBackgroundColor(orange_prev);
             }
+        }
+
+        // Make others white
+        // others are from last stage to current highest stage
+        int highest_stage = Math.max(curr_op.getCurrent_stage(),
+                next_op.getCurrent_stage());
+        Log.d("IMP", String.valueOf(highest_stage));
+        for (int i = NUM_STAGES-1; i >= highest_stage; i--) {
+            stages[i].setBackgroundColor(white);
         }
     }
 
