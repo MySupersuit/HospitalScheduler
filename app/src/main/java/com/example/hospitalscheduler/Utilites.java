@@ -60,6 +60,46 @@ public final class Utilites {
         }
     }
 
+    public static String categoryToSecColour(String category) {
+        switch (category) {
+            case NEURO:
+                return "#7898a1";
+            case HEAD_AND_NECK:
+                return "#b3878e";
+            case CARDIOTHOR:
+                return "#b3b377";
+            case VASCULAR:
+                return "#a1a1af";
+            case ORTHO:
+                return "#b2b2b2";
+            case UROLOGY:
+                return "#6bb06b";
+            default:
+                return "#FFFFFF";
+//                return "errorInUtilities";
+        }
+    }
+
+    public static String categoryToTextColour(String category) {
+        switch (category) {
+            case NEURO:
+                return "#4e636a";
+            case HEAD_AND_NECK:
+                return "#75595d";
+            case CARDIOTHOR:
+                return "#75754e";
+            case VASCULAR:
+                return "#6a6a73";
+            case ORTHO:
+                return "#757575";
+            case UROLOGY:
+                return "#467346";
+            default:
+                return "#FFFFFF";
+//                return "errorInUtilities";
+        }
+    }
+
     public static void makeSnackbar(String message, View view, int length) {
         Snackbar snackbar = Snackbar.make(view, message, length);
         snackbar.show();

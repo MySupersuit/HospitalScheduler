@@ -131,10 +131,12 @@ public class Overview extends AppCompatActivity {
                         for (int i = 0; i < data.size(); i++) {
                             if (isNotifiedMap.containsKey(String.valueOf(i + 1))) {
                                 new_ots.add(new OperatingTheatreV2(i + 1, isNotifiedMap.get(String.valueOf(i + 1)), data.get(i)));
+//                                rv_OTlist.add(new OperatingTheatreV2(i+1, isNotifiedMap.get(String.valueOf(i+1)), data.get(i)));
                             } else {
                                 new_ots.add(new OperatingTheatreV2(i + 1, 0, data.get(i)));
+//                                rv_OTlist.add(new OperatingTheatreV2(i+1, 0, data.get(i)));
                             }
-
+//                            allOTs.add(new OperatingTheatreV2(i+1, 0, data.get(i)));
                             animators.add(new ObjectAnimator());
                         }
                         // Separate copies of lists
@@ -514,14 +516,20 @@ public class Overview extends AppCompatActivity {
 
             ArrayList<OperatingTheatreV2> to_show = new ArrayList<>(allOTs);
 
+            for (int i = 0; i < to_show.size(); i++) {
+                Log.d("I", String.valueOf(to_show.get(i).getIsNotified()));
+            }
+
             rv_OTlist.clear();
             rv_OTlist.addAll(to_show);
             myAdapter.notifyDataSetChanged();
 
         } else {
             // else show only the theatres notified
-//            int[] notifiedOTsArray = getNotifiedOTsArray();
+
+            // get from shared prefs
             ArrayList<OperatingTheatreV2> to_show = getNotifiedOTs();
+
             if (to_show.size() == 0) {
                 makeSnackbar("No notified theatres", mView, Snackbar.LENGTH_SHORT);
                 return;
@@ -534,19 +542,27 @@ public class Overview extends AppCompatActivity {
             rv_OTlist.clear();
             rv_OTlist.addAll(to_show);
             myAdapter.notifyDataSetChanged();
-
         }
-
     }
 
+    // returns ots to be notified of
+    // gets from sharedPrefs and updates allOTs?
     private ArrayList<OperatingTheatreV2> getNotifiedOTs() {
         ArrayList<OperatingTheatreV2> ots = new ArrayList<>();
+        HashMap<String, Integer> map = (HashMap<String, Integer>) loadMap();
+        Log.d("GETNOT", map.toString());
+
         for (int i = 0; i < allOTs.size(); i++) {
+            String ot_num = String.valueOf(allOTs.get(i).getNumber());
+            if (map.containsKey(ot_num)) {
+                allOTs.get(i).setIsNotified(map.get(ot_num));
+            }
             if (allOTs.get(i).getIsNotified() == 1) {
                 ots.add(allOTs.get(i));
             }
         }
         return ots;
+
     }
 
     private void stopAnimation(ObjectAnimator animator) {
