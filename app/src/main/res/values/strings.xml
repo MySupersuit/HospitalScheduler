@@ -8,4 +8,22 @@
     <string name="show_notified_key">notified_key</string>
     <string name="menu_refresh">Refresh</string>
     <string name="is_notified_pref">is_notified_pref</string>
+    <string name="ot_default_number">OT 0</string>
+    <string name="ot_current">Current</string>
+    <string name="ot_next">Next</string>
+    <string name="stage_default">stage 0:</string>
+    <string name="default_time_value">0</string>
+    <string name="minutes">m</string>
+    <string name="surgeon_placeholder">Surgeon</string>
+    <string name="_1">1</string>
+    <string name="curr_op_stage_marker">curr_op_stage_marker</string>
+    <string name="next_op_stage_marker">next_op_stage_marker</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="doctor_icon">Doctor icon</string>
+    <string name="background_img_desc">Background image describing operation category</string>
+    <string name="bkgrnd_alpha_layer">bkgrnd alpha layer</string>
+    <string name="clock_icon">Clock icon</string>
 </resources>

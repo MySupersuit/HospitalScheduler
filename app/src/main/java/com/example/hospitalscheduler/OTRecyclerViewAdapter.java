@@ -49,7 +49,8 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         View view;
         LayoutInflater mInflator = LayoutInflater.from(mContext);
 
-        view = mInflator.inflate(R.layout.cardview_ot_v4, parent, false);
+//        view = mInflator.inflate(R.layout.cardview_ot_v4, parent, false);
+        view = mInflator.inflate(R.layout.cardview_ot_v5, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -130,9 +131,16 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         // Turn completed and current stages blue
         TextView[] stages = {holder.stage1, holder.stage2,
                 holder.stage3, holder.stage4, holder.stage5};
+        ImageView[] curr_marks = {holder.curr_mark1, holder.curr_mark2,
+                holder.curr_mark3, holder.curr_mark4, holder.curr_mark5};
+        ImageView[] next_marks = {holder.next_mark1, holder.next_mark2,
+                holder.next_mark3, holder.next_mark4, holder.next_mark5};
+
         setStagesColour(stages, curr_op, next_op,
                 curr_op.getCategory(), next_op.getCategory(),
-                holder.curr_op_header, holder.next_op_header);
+                holder.curr_op_header, holder.next_op_header,
+                curr_marks, next_marks);
+//        holder.curr_mark1.setColorFilter(Color.parseColor("#FF0000"));
 
         // Set notification bell
         if (ot.getIsNotified() == 1) {
@@ -153,7 +161,8 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
 
     private void setStagesColour(TextView[] stages, OperationV2 curr_op, OperationV2 next_op,
                                  String curr_cat, String next_cat,
-                                 TextView curr_op_header, TextView next_op_header) {
+                                 TextView curr_op_header, TextView next_op_header,
+                                 ImageView[] curr_marks, ImageView[] next_marks) {
         int blue_curr = ContextCompat.getColor(mContext, R.color.stage_blue_curr);
         int blue_prev = ContextCompat.getColor(mContext, R.color.stage_blue_prev);
         int light_blue = ContextCompat.getColor(mContext, R.color.light_blue);
@@ -161,6 +170,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         int orange_prev = ContextCompat.getColor(mContext, R.color.stage_orange_prev);
         int white = ContextCompat.getColor(mContext, R.color.white);
         int black = ContextCompat.getColor(mContext, R.color.black);
+        int transparant = ContextCompat.getColor(mContext, R.color.transparent);
 
         int curr_op_sec_col = Color.parseColor(categoryToSecColour(curr_cat));
         int curr_op_col = Color.parseColor(categoryToColour(curr_cat));
@@ -172,30 +182,40 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         curr_op_header.setBackgroundColor(curr_op_col);
         next_op_header.setBackgroundColor(next_op_col);
 
+        for (int i = 0; i <curr_marks.length; i++) {
+            curr_marks[i].setImageAlpha(0);
+            next_marks[i].setImageAlpha(0);
+        }
+
         // Current Operation first
         if (curr_op.getCurrent_stage() > 0) {
-//            stages[curr_op.getCurrent_stage() - 1].setBackgroundColor(blue_curr);
             stages[curr_op.getCurrent_stage() - 1].setBackgroundColor(curr_op_sec_col);
-            stages[curr_op.getCurrent_stage() -1].setTextColor(white);
-            stages[curr_op.getCurrent_stage() -1].setAlpha(1f);
+            stages[curr_op.getCurrent_stage() - 1].setTextColor(white);
+            stages[curr_op.getCurrent_stage() - 1].setAlpha(1f);
+            curr_marks[curr_op.getCurrent_stage() - 1].setImageAlpha(255);
+            curr_marks[curr_op.getCurrent_stage() - 1].setColorFilter(curr_op_col);
 
             for (int i = curr_op.getCurrent_stage() - 2; i >= 0; i--) {
                 stages[i].setBackgroundColor(curr_op_col);
                 stages[i].setTextColor(curr_op_text_col);
                 stages[i].setAlpha(1f);
+                curr_marks[i].setImageAlpha(0);
             }
         }
 
-        // Next Operation second
+        // Next Operation second as will nearly always be behind the current operation
         if (next_op.getCurrent_stage() > 0) {
             stages[next_op.getCurrent_stage() - 1].setBackgroundColor(next_op_sec_col);
-            stages[next_op.getCurrent_stage() -1].setTextColor(white);
-            stages[next_op.getCurrent_stage() -1].setAlpha(1f);
+            stages[next_op.getCurrent_stage() - 1].setTextColor(white);
+            stages[next_op.getCurrent_stage() - 1].setAlpha(1f);
+            next_marks[next_op.getCurrent_stage() - 1].setImageAlpha(255);
+            next_marks[next_op.getCurrent_stage() - 1].setColorFilter(next_op_col);
 
             for (int i = next_op.getCurrent_stage() - 2; i >= 0; i--) {
                 stages[i].setBackgroundColor(next_op_col);
                 stages[i].setTextColor(next_op_text_col);
                 stages[i].setAlpha(1f);
+                next_marks[i].setImageAlpha(0);
             }
         }
 
@@ -205,7 +225,8 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
                 next_op.getCurrent_stage());
         for (int i = NUM_STAGES - 1; i >= highest_stage; i--) {
             stages[i].setBackgroundColor(white);
-            stages[i].setAlpha(0.3f);
+            stages[i].setTextColor(black);
+            stages[i].setAlpha(0.2f);
         }
     }
 
@@ -255,20 +276,22 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         CardView cardview;
 
         TextView curr_surgeon;
-        ImageView curr_back_colour;
+        View curr_back_colour;
         ImageView curr_back_image;
         TextView curr_stage_time;
         TextView curr_stage_num;
         TextView curr_op_header;
 
         TextView next_surgeon;
-        ImageView next_back_colour;
+        View next_back_colour;
         ImageView next_back_image;
         TextView next_stage_time;
         TextView next_stage_num;
         TextView next_op_header;
 
         TextView stage1, stage2, stage3, stage4, stage5;
+        ImageView curr_mark1, curr_mark2, curr_mark3, curr_mark4, curr_mark5;
+        ImageView next_mark1, next_mark2, next_mark3, next_mark4, next_mark5;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -281,11 +304,11 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
             curr_stage_time = (TextView) itemView.findViewById(R.id.curr_stage_time);
             curr_stage_num = (TextView) itemView.findViewById(R.id.curr_in_stage);
             curr_surgeon = (TextView) itemView.findViewById(R.id.ov_curr_surgeon);
-            curr_back_colour = (ImageView) itemView.findViewById(R.id.ov_curr_back_colour);
+            curr_back_colour = (View) itemView.findViewById(R.id.ov_curr_back_colour);
             curr_back_image = (ImageView) itemView.findViewById(R.id.ov_curr_back_image);
             curr_op_header = (TextView) itemView.findViewById(R.id.curr_op_header);
 
-            next_back_colour = (ImageView) itemView.findViewById(R.id.ov_next_back_colour);
+            next_back_colour = (View) itemView.findViewById(R.id.ov_next_back_colour);
             next_back_image = (ImageView) itemView.findViewById(R.id.ov_next_back_image);
             next_surgeon = (TextView) itemView.findViewById(R.id.ov_next_surgeon);
             next_stage_time = (TextView) itemView.findViewById(R.id.next_stage_time);
@@ -297,6 +320,18 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
             stage3 = (TextView) itemView.findViewById(R.id.ov_status_3);
             stage4 = (TextView) itemView.findViewById(R.id.ov_status_4);
             stage5 = (TextView) itemView.findViewById(R.id.ov_status_5);
+
+            curr_mark1 = (ImageView) itemView.findViewById(R.id.ov_current_marker_1);
+            curr_mark2 = (ImageView) itemView.findViewById(R.id.ov_current_marker_2);
+            curr_mark3 = (ImageView) itemView.findViewById(R.id.ov_current_marker_3);
+            curr_mark4 = (ImageView) itemView.findViewById(R.id.ov_current_marker_4);
+            curr_mark5 = (ImageView) itemView.findViewById(R.id.ov_current_marker_5);
+
+            next_mark1 = (ImageView) itemView.findViewById(R.id.ov_next_marker_1);
+            next_mark2 = (ImageView) itemView.findViewById(R.id.ov_next_marker_2);
+            next_mark3 = (ImageView) itemView.findViewById(R.id.ov_next_marker_3);
+            next_mark4 = (ImageView) itemView.findViewById(R.id.ov_next_marker_4);
+            next_mark5 = (ImageView) itemView.findViewById(R.id.ov_next_marker_5);
 
         }
     }
