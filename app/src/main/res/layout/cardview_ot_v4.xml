@@ -34,12 +34,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:id="@+id/curr_op_header"
                     android:background="@color/light_blue"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:id="@+id/next_op_header"
                     android:background="@color/stage_orange_prev"/>
 
             </LinearLayout>
