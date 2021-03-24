@@ -12,6 +12,11 @@
 
         <activity android:name=".loginActivity">
             <!--Open the app with the login screen-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
         <activity
@@ -25,12 +30,6 @@
         <activity
             android:name=".Overview"
             android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
 <!--        Firebase Cloud Messaging stuff - Works but is just sending notifications to everyone -->

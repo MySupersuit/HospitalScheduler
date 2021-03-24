@@ -1,14 +1,18 @@
 package com.example.hospitalscheduler;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 public class loginActivity extends AppCompatActivity {
 
@@ -26,7 +30,7 @@ public class loginActivity extends AppCompatActivity {
 
     //Actual credentials(username, password) used for comparison
     //final = cannot change the value
-    private final String sampleUsername = "surgeon";
+    private final String sampleUsername = "12345";
     private final String samplePassword = "password";
 
     // Boolean to validate the credentials - check if true or false
@@ -34,6 +38,9 @@ public class loginActivity extends AppCompatActivity {
 
     //Total number of attempts allowed
     private int countAttempts = 3;
+
+    //Layout
+    ConstraintLayout layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,9 @@ public class loginActivity extends AppCompatActivity {
         //Retrieve the username and password entered
         username = findViewById(R.id.editTextHospitalUsername);
         userPassword = findViewById(R.id.editTextAppPassword);
+
+        //Layout from XML
+        layout = findViewById(R.id.loginLayout);
 
         // For now - the login button moves to the Overview screen
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -83,11 +93,34 @@ public class loginActivity extends AppCompatActivity {
                         //Update the screen count of attempts with current (reduced) count
                         numberOfAttempts.setText("Number of attempts left: "+countAttempts);
 
+
                         //Once no attempts are left
-                        if(countAttempts == 0)
-                        {
+                        if(countAttempts == 0) {
                             //Disable the login button
                             loginButton.setEnabled(false);
+                            //Change the login button to grey to indicate that the button is disabled
+                            loginButton.setBackgroundColor(Color.GRAY);
+
+                            //Security Message 2
+                            //Snackbar message to user
+                            //Indefinite length
+                            Snackbar msgZeroAttempts = Snackbar.make(v,"Contact it@thehospital.ie",Snackbar.LENGTH_INDEFINITE);
+                            msgZeroAttempts.setAction("CLOSE", new View.OnClickListener() { //CLOSE text
+                                @Override
+                                public void onClick(View v) {
+                                    //If user presses close - message is dismissed
+                                    msgZeroAttempts.dismiss();
+                                }
+                            }); // end of action
+                            //Display the button
+                            msgZeroAttempts.show();
+
+                        }else{ //Counts are not equal to 0
+                            //Security Message 1 - invalid username and password
+                            //Length = short
+                            Toast toast_attemptsNotZero = Toast.makeText(loginActivity.this,"Incorrect username/password/both. Please try again",Toast.LENGTH_SHORT);
+                            //Display the message
+                            toast_attemptsNotZero.show();
                         }
                     }
                     //If the boolean - correct is true
@@ -98,6 +131,9 @@ public class loginActivity extends AppCompatActivity {
                         Intent toOverview = new Intent(loginActivity.this,Overview.class);
                         //Switch screen
                         startActivity(toOverview);
+                        //Prevent user from going back to the login screen
+                        finish(); //Removes the login activity from the back stack
+
                     }
 
 
