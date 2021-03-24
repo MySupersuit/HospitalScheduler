@@ -27,4 +27,7 @@
     <string name="bkgrnd_alpha_layer">bkgrnd alpha layer</string>
     <string name="clock_icon">Clock icon</string>
     <string name="default_notification_channel_id">TEST_CHANNEL_ID</string>
+    <string name="info_tab_title">Info</string>
+    <string name="schedule_tab_title">Schedule</string>
+    <string name="next_tab_title">Next</string>
 </resources>

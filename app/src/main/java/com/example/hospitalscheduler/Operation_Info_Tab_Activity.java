@@ -45,9 +45,15 @@ public class Operation_Info_Tab_Activity extends AppCompatActivity {
             notified = intent.getExtras().getInt("Notified");
         }
 
+        // just pass current operation
         OTInfoFragment info_frag = OTInfoFragment.newInstance(ot_num, schedule, notified);
-        pagerAdapter.add(info_frag, "Info");
+        pagerAdapter.add(info_frag, "Current");
 
+        // just pass next operation
+        OTInfoFragment next_frag = OTInfoFragment.newInstance(ot_num, schedule, notified);
+        pagerAdapter.add(next_frag, "Next");
+
+        // pass full schedule
         OTScheduleFragment sched_frag = OTScheduleFragment.newInstance(ot_num, schedule.get(0).getCurr_stage_start_time());
         pagerAdapter.add(sched_frag, "Schedule");
 
