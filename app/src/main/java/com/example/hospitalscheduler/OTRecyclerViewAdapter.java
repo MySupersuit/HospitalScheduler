@@ -84,47 +84,41 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         String mins_in_next_stage = getMinutesSince(next_op.getCurr_stage_start_time());
         holder.next_stage_time.setText(mins_in_next_stage);
 
-        holder.cardview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, Operation_Info_Tab_Activity.class);
-                ArrayList<OperationV2> schedule = (ArrayList<OperationV2>) ot.getSchedule();
-                intent.putParcelableArrayListExtra("Schedule", schedule);
-                intent.putExtra("Number", ot.getNumber());
-                intent.putExtra("Notified", ot.getIsNotified());
+        holder.cardview.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, Operation_Info_Tab_Activity.class);
+            ArrayList<OperationV2> schedule = ot.getSchedule();
+            intent.putParcelableArrayListExtra("Schedule", schedule);
+            intent.putExtra("Number", ot.getNumber());
+            intent.putExtra("Notified", ot.getIsNotified());
 
-                ovcl.stopAnimCallback(ot.getNumber());
+            ovcl.stopAnimCallback(ot.getNumber());
 
-                mContext.startActivity(intent);
-            }
+            mContext.startActivity(intent);
         });
 
-        holder.notify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.notify.isChecked()) {
-                    makeSnackbar("Getting notifications for " + operatingTheatresV2.get(position).getNumber(),
-                            v, Snackbar.LENGTH_SHORT);
+        holder.notify.setOnClickListener(v -> {
+            if (holder.notify.isChecked()) {
+                makeSnackbar("Getting notifications for " + operatingTheatresV2.get(position).getNumber(),
+                        v, Snackbar.LENGTH_SHORT);
 
-                    HashMap<String, Integer> not = (HashMap<String, Integer>) loadMap();
-                    not.put(String.valueOf(ot.getNumber()), 1);
-                    Log.d("MAP", not.toString());
-                    saveMap(not);
-                    Log.d("SAVE", "saved apparently");
+                HashMap<String, Integer> not = (HashMap<String, Integer>) loadMap();
+                not.put(String.valueOf(ot.getNumber()), 1);
+                Log.d("MAP", not.toString());
+                saveMap(not);
+                Log.d("SAVE", "saved apparently");
 
-                    ot.setIsNotified(1);
-                } else {
-                    makeSnackbar("Not getting notifications for " + operatingTheatresV2.get(position).getNumber(),
-                            v, Snackbar.LENGTH_SHORT);
+                ot.setIsNotified(1);
+            } else {
+                makeSnackbar("Not getting notifications for " + operatingTheatresV2.get(position).getNumber(),
+                        v, Snackbar.LENGTH_SHORT);
 
-                    HashMap<String, Integer> not = (HashMap<String, Integer>) loadMap();
-                    not.put(String.valueOf(ot.getNumber()), 0);
-                    Log.d("MAP", not.toString());
-                    saveMap(not);
-                    Log.d("SAVE", "saved apparently");
+                HashMap<String, Integer> not = (HashMap<String, Integer>) loadMap();
+                not.put(String.valueOf(ot.getNumber()), 0);
+                Log.d("MAP", not.toString());
+                saveMap(not);
+                Log.d("SAVE", "saved apparently");
 
-                    ot.setIsNotified(0);
-                }
+                ot.setIsNotified(0);
             }
         });
 

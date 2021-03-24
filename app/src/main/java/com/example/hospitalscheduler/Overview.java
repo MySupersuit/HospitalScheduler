@@ -240,6 +240,7 @@ public class Overview extends AppCompatActivity {
 
         sched.set(old_op_index, op);
         OperatingTheatreV2 op1 = allOTs.get(updatedTheatre - 1);
+
         op1.setSchedule(sched);
         allOTs.set(updatedTheatre - 1, op1);
 
@@ -254,8 +255,6 @@ public class Overview extends AppCompatActivity {
         }
 
         myAdapter.notifyDataSetChanged();
-
-//        makeSnackbar("Refresh for new data!", mView, Snackbar.LENGTH_LONG);
 
         // if haven't asked for updates then don't send notification
         if (allOTs.get(updatedTheatre - 1).getIsNotified() == 0) {

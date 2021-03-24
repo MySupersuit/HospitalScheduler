@@ -16,7 +16,7 @@ import java.util.List;
 
 public class OTPagerAdapter extends FragmentPagerAdapter {
 
-    private static final int NUM_TABS = 2;
+    private static final int NUM_TABS = 3;
     private final List<Fragment> fragments = new ArrayList<>();
     private final List<String> fragmentTitles = new ArrayList<>();
 

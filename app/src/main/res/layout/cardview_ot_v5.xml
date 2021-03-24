@@ -196,7 +196,7 @@
                             android:includeFontPadding="false"
                             android:text="@string/default_time_value"
                             android:textColor="@color/white"
-                            android:textSize="35sp"
+                            android:textSize="32sp"
 
                             android:textStyle="bold"
                             cardview:layout_constraintStart_toStartOf="@+id/curr_in_stage"
@@ -561,7 +561,7 @@
                             android:includeFontPadding="false"
                             android:text="@string/default_time_value"
                             android:textColor="@color/white"
-                            android:textSize="35sp"
+                            android:textSize="32sp"
                             android:textStyle="bold"
                             cardview:layout_constraintStart_toStartOf="@+id/next_in_stage"
                             cardview:layout_constraintTop_toBottomOf="@+id/next_in_stage" />

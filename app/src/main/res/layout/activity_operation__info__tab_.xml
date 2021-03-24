@@ -10,22 +10,32 @@
         android:id="@+id/op_info_tabLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/off_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:tabSelectedTextColor="@color/grey"
+        app:tabIndicatorColor="@color/grey"
+        app:tabTextColor="@color/pewter"
         app:tabMode="fixed">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/op_info_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Info" />
+            android:text="@string/info_tab_title" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/op_next_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next_tab_title" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/op_schedule_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Schedule" />
+            android:text="@string/schedule_tab_title" />
 
     </com.google.android.material.tabs.TabLayout>
 
