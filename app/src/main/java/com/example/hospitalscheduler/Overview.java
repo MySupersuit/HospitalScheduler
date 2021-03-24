@@ -2,6 +2,7 @@ package com.example.hospitalscheduler;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationManagerCompat;
@@ -14,11 +15,13 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.AlarmManager;
+import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -191,6 +194,25 @@ public class Overview extends AppCompatActivity {
     }
 
     // TODO Notifications when app is closed = FCM
+    // Can do with FCM - when click notify, app send registration id to server with number and add to db
+    // Shouldn't happen crazy often
+    // Someone wants to be notified - generally they want be flipping it the whole time
+    // Someone removes notification - can also send to server to remove them
+    //
+    // DB LAYOUT
+    // operations : {...},
+    // notifications: {
+    //      "1": {
+    //          "id number of app notified of OT 1",
+    //          "another id number"
+    //      },
+    //      "2": {...},
+    //      "3": {...}
+    // }
+    //
+    // Then when updating on web app query which apps should be sent push notification
+    // and send it through. Eg. OT 1 gets updated, query notification["1"] and send
+
     private void handleDataChange(DataSnapshot ds) {
         // ds is the child node that has changed
         // ie. the OperationV2 object that has changed
@@ -237,7 +259,6 @@ public class Overview extends AppCompatActivity {
 
         // if haven't asked for updates then don't send notification
         if (allOTs.get(updatedTheatre - 1).getIsNotified() == 0) {
-//            makeSnackbar("Refresh for new data!", mView, Snackbar.LENGTH_LONG);
             return;
         }
 
@@ -252,7 +273,13 @@ public class Overview extends AppCompatActivity {
                 this, "TEST_CHANNEL_ID")
                 .setSmallIcon(R.drawable.clock_icon)
                 .setContentTitle(titleString)
-                .setContentText(updateString);
+                .setContentText(updateString)
+                .setAutoCancel(true);
+
+        // click notification brings to overview screen
+        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0,
+                new Intent(mContext, Overview.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(contentIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         int notificationId = 1;

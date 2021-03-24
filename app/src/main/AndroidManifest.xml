@@ -31,6 +31,19 @@
             android:name=".Overview"
             android:launchMode="singleTop">
         </activity>
+
+<!--        Firebase Cloud Messaging stuff - Works but is just sending notifications to everyone -->
+        <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_baseline_notifications_24"/>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/light_blue" />
+
         <activity android:name=".MainActivity" />
     </application>
 

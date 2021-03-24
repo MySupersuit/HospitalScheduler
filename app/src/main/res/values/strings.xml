@@ -26,4 +26,5 @@
     <string name="background_img_desc">Background image describing operation category</string>
     <string name="bkgrnd_alpha_layer">bkgrnd alpha layer</string>
     <string name="clock_icon">Clock icon</string>
+    <string name="default_notification_channel_id">TEST_CHANNEL_ID</string>
 </resources>
