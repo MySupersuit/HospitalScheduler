@@ -43,6 +43,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -129,6 +130,7 @@ public class Overview extends AppCompatActivity {
                         // get shared prefs here
                         isNotifiedMap = (HashMap<String, Integer>) loadMap();
                         Log.d("SIZE", String.valueOf(isNotifiedMap.size()));
+
 
                         // if in shared prefs then use that value as isNotified
                         for (int i = 0; i < data.size(); i++) {
@@ -477,11 +479,23 @@ public class Overview extends AppCompatActivity {
                     ArrayList<OperationV2> operationsInOT = new ArrayList<>();
                     for (String op_key : ops_inOT) {
                         DataSnapshot ds = ot_num_ds.child(op_key);
-                        OperationV2 op = ds.getValue(OperationV2.class);
-                        operationsInOT.add(op);
-                        opsDiffCheck.put(op_key, op);
+                        Log.d("LONG", ds.toString());
+                        OperationV2 op = null;
+//                        try {
+                            op = ds.getValue(OperationV2.class);
+//                            Log.d("ADD", "Add");
+//                        } catch (DatabaseException e) {
+//                            Log.e("DB", e.toString());
+//                        }
+//                        if (op != null) {
+                            operationsInOT.add(op);
+                            opsDiffCheck.put(op_key, op);
+//                        }
+//
+//                        operationsInOT.add(op);
+//                        opsDiffCheck.put(op_key, op);
                     }
-
+                    Log.d("OPs", operationsInOT.toString());
                     new_schedules.add(operationsInOT);
                 }
                 finishedCallback.callback(new_schedules);

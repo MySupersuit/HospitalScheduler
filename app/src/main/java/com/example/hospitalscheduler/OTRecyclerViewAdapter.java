@@ -57,6 +57,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
     @Override
     public void onBindViewHolder(@NonNull OTRecyclerViewAdapter.MyViewHolder holder, int position) {
 
+        Log.d("NUM", String.valueOf(position));
         OperatingTheatreV2 ot = operatingTheatresV2.get(position);
         OperationV2 curr_op = ot.getSchedule().get(0);
         OperationV2 next_op = null;

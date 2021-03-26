@@ -30,4 +30,5 @@
     <string name="info_tab_title">Info</string>
     <string name="schedule_tab_title">Schedule</string>
     <string name="next_tab_title">Next</string>
+    <string name="no_covid_info">No COVID Info</string>
 </resources>
