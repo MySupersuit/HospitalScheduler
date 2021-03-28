@@ -1,4 +1,4 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.objects;
 
 import android.os.Parcel;
 import android.os.Parcelable;

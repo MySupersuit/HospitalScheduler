@@ -1,33 +1,25 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.app.AlarmManager;
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,29 +28,31 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.example.hospitalscheduler.objects.OperatingTheatreV2;
+import com.example.hospitalscheduler.objects.OperationV2;
+import com.example.hospitalscheduler.R;
+import com.example.hospitalscheduler.interfaces.SimpleCallback;
+import com.example.hospitalscheduler.adapters.OTRecyclerViewAdapter;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.example.hospitalscheduler.Utilites.*;
+import static com.example.hospitalscheduler.utilities.Utilites.*;
 
-public class Overview extends AppCompatActivity {
+public class OverviewActivity extends AppCompatActivity {
 
     boolean showOnlyNotified;
 
@@ -279,7 +273,7 @@ public class Overview extends AppCompatActivity {
 
         // click notification brings to overview screen
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0,
-                new Intent(mContext, Overview.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                new Intent(mContext, OverviewActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(contentIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);

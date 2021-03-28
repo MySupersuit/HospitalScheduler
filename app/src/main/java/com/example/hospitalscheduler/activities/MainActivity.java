@@ -1,8 +1,10 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.hospitalscheduler.R;
 
 public class MainActivity extends AppCompatActivity {
 

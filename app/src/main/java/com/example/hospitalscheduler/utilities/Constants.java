@@ -1,4 +1,4 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.utilities;
 
 public final class Constants {
     // Operation Categories

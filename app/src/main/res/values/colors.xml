@@ -24,4 +24,5 @@
     <color name="transparent">#00000000</color>
     <color name="off_white">#F6F6F6</color>
     <color name="notif_red">#FF5722</color>
+    <color name="curr_sched_red">#EF9A9A</color>
 </resources>

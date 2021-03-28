@@ -31,4 +31,8 @@
     <string name="schedule_tab_title">Schedule</string>
     <string name="next_tab_title">Next</string>
     <string name="no_covid_info">No COVID Info</string>
+    <string name="surgeon_label">Surgeon</string>
+    <string name="nurse_label">Nurse</string>
+    <string name="anesth_label">Anesthetist</string>
+    <string name="registrar_label">Registrar</string>
 </resources>

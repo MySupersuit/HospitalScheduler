@@ -1,4 +1,4 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hospitalscheduler.R;
 import com.google.android.material.snackbar.Snackbar;
 
 public class loginActivity extends AppCompatActivity {
@@ -128,7 +129,7 @@ public class loginActivity extends AppCompatActivity {
                     else
                     {
                         //Change screen to overview IF the credentials are correct
-                        Intent toOverview = new Intent(loginActivity.this,Overview.class);
+                        Intent toOverview = new Intent(loginActivity.this, OverviewActivity.class);
                         //Switch screen
                         startActivity(toOverview);
                         //Prevent user from going back to the login screen

@@ -1,4 +1,4 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.adapters;
 
 import android.os.Bundle;
 

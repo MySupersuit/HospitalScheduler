@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".OTScheduleFragment">
+    tools:context=".fragments.OTScheduleFragment"
+    android:animateLayoutChanges="true">
 
     <!--    <LinearLayout-->
     <!--        android:id="@+id/test_frame_layout"-->
@@ -24,8 +25,8 @@
             android:id="@+id/ot_frag_header_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/light_blue">
+            android:background="@color/light_blue"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/info_frag_category_tv"
@@ -36,9 +37,9 @@
                 android:layout_marginBottom="8dp"
                 android:text="Category"
                 android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/info_frag_bullet"
@@ -112,35 +113,35 @@
                 android:id="@+id/info_frag_covid_info_text"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="@tools:sample/lorem/random"
-                android:maxLines="3"
-                android:textSize="15sp"
-                app:layout_constraintTop_toBottomOf="@id/info_frag_covid_layout"
-                app:layout_constraintEnd_toEndOf="@id/info_frag_covid_layout"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/small_rounded_corners"
+                android:maxLines="3"
+                android:padding="4dp"
+                android:text="@tools:sample/lorem/random"
+                android:textSize="15sp"
                 android:visibility="gone"
-                android:padding="4dp"/>
+                app:layout_constraintEnd_toEndOf="@id/info_frag_covid_layout"
+                app:layout_constraintTop_toBottomOf="@id/info_frag_covid_layout" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/info_frag_covid_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
 
                 <TextView
                     android:id="@+id/covid_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/dotted_line"
                     android:text="COVID"
                     android:textSize="15sp"
-                    android:background="@drawable/dotted_line"
 
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -153,7 +154,7 @@
                     android:src="@drawable/announcement"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/covid_text"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -365,99 +366,251 @@
                             android:background="@drawable/rounded_corners"
                             app:layout_constraintTop_toBottomOf="@id/info_frag_staff_title">
 
-                            <ImageView
-                                android:id="@+id/info_frag_surgeon_icon"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_marginStart="32dp"
-                                android:layout_marginTop="16dp"
-                                android:src="@drawable/doctoricon"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/grey" />
-
-                            <TextView
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/info_frag_surgeon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="12dp"
-                                android:text="Surgeon"
-                                android:textColor="@color/grey"
-                                android:textSize="18sp"
-                                app:layout_constraintBottom_toBottomOf="@id/info_frag_surgeon_icon"
-                                app:layout_constraintStart_toEndOf="@id/info_frag_surgeon_icon"
-                                app:layout_constraintTop_toTopOf="@id/info_frag_surgeon_icon" />
-
-                            <ImageView
-                                android:id="@+id/info_frag_nurse_icon"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
                                 android:layout_marginStart="32dp"
                                 android:layout_marginTop="16dp"
-                                android:src="@drawable/doctoricon"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/info_frag_surgeon_icon"
-                                app:tint="@color/grey" />
+                                app:layout_constraintTop_toTopOf="parent">
 
-                            <TextView
+                                <ImageView
+                                    android:id="@+id/info_frag_surgeon_icon"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/doctoricon"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/grey" />
+
+                                <TextView
+                                    android:id="@+id/info_frag_surgeon_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="@string/surgeon_label"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toTopOf="@id/info_frag_surgeon_tv"
+                                    app:layout_constraintStart_toEndOf="@id/info_frag_surgeon_icon"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/info_frag_surgeon_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="@tools:sample/lorem"
+                                    android:textColor="@color/grey"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@id/info_frag_surgeon_icon"
+                                    app:layout_constraintTop_toBottomOf="@id/info_frag_surgeon_label" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/info_frag_nurse"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="12dp"
-                                android:text="Nurse"
-                                android:textColor="@color/grey"
-                                android:textSize="18sp"
-                                app:layout_constraintBottom_toBottomOf="@id/info_frag_nurse_icon"
-                                app:layout_constraintStart_toEndOf="@id/info_frag_nurse_icon"
-                                app:layout_constraintTop_toTopOf="@id/info_frag_nurse_icon" />
-
-                            <ImageView
-                                android:id="@+id/info_frag_anesth_icon"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
                                 android:layout_marginStart="32dp"
                                 android:layout_marginTop="16dp"
-                                android:src="@drawable/doctoricon"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/info_frag_nurse_icon"
-                                app:tint="@color/grey" />
+                                app:layout_constraintTop_toBottomOf="@id/info_frag_surgeon">
 
-                            <TextView
+                                <ImageView
+                                    android:id="@+id/info_frag_nurse_icon"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/doctoricon"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/grey" />
+
+                                <TextView
+                                    android:id="@+id/info_frag_nurse_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="@string/nurse_label"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toTopOf="@id/info_frag_nurse_tv"
+                                    app:layout_constraintStart_toEndOf="@id/info_frag_nurse_icon"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/info_frag_nurse_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="@tools:sample/lorem"
+                                    android:textColor="@color/grey"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@id/info_frag_nurse_icon"
+                                    app:layout_constraintTop_toBottomOf="@id/info_frag_nurse_label" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/info_frag_anesth"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="12dp"
-                                android:text="Anesthetist"
-                                android:textColor="@color/grey"
-                                android:textSize="18sp"
-                                app:layout_constraintBottom_toBottomOf="@id/info_frag_anesth_icon"
-                                app:layout_constraintStart_toEndOf="@id/info_frag_anesth_icon"
-                                app:layout_constraintTop_toTopOf="@id/info_frag_anesth_icon" />
-
-                            <ImageView
-                                android:id="@+id/info_frag_registrar_icon"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
                                 android:layout_marginStart="32dp"
                                 android:layout_marginTop="16dp"
-                                android:layout_marginBottom="16dp"
-                                android:src="@drawable/doctoricon"
-                                app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@id/info_frag_anesth_icon"
-                                app:tint="@color/grey" />
+                                app:layout_constraintTop_toBottomOf="@id/info_frag_nurse">
 
-                            <TextView
+                                <ImageView
+                                    android:id="@+id/info_frag_anesth_icon"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/doctoricon"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/grey" />
+
+                                <TextView
+                                    android:id="@+id/info_frag_anesth_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="@string/anesth_label"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toTopOf="@id/info_frag_anesth_tv"
+                                    app:layout_constraintStart_toEndOf="@id/info_frag_anesth_icon"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/info_frag_anesth_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="@tools:sample/lorem"
+                                    android:textColor="@color/grey"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@id/info_frag_anesth_icon"
+                                    app:layout_constraintTop_toBottomOf="@id/info_frag_anesth_label" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/info_frag_registrar"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="12dp"
-                                android:text="Registrar"
-                                android:textColor="@color/grey"
-                                android:textSize="18sp"
-                                app:layout_constraintBottom_toBottomOf="@id/info_frag_registrar_icon"
-                                app:layout_constraintStart_toEndOf="@id/info_frag_registrar_icon"
-                                app:layout_constraintTop_toTopOf="@id/info_frag_registrar_icon" />
+                                android:layout_marginStart="32dp"
+                                android:layout_marginTop="16dp"
+                                android:layout_marginBottom="16dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/info_frag_anesth"
+                                app:layout_constraintBottom_toBottomOf="parent">
+
+                                <ImageView
+                                    android:id="@+id/info_frag_registrar_icon"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:src="@drawable/doctoricon"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/grey" />
+
+                                <TextView
+                                    android:id="@+id/info_frag_registrar_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="@string/registrar_label"
+                                    android:textSize="10sp"
+                                    app:layout_constraintBottom_toTopOf="@id/info_frag_registrar_tv"
+                                    app:layout_constraintStart_toEndOf="@id/info_frag_registrar_icon"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/info_frag_registrar_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="@tools:sample/lorem"
+                                    android:textColor="@color/grey"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@id/info_frag_registrar_icon"
+                                    app:layout_constraintTop_toBottomOf="@id/info_frag_registrar_label" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                            <!--                            <ImageView-->
+                            <!--                                android:id="@+id/info_frag_nurse_icon"-->
+                            <!--                                android:layout_width="40dp"-->
+                            <!--                                android:layout_height="40dp"-->
+                            <!--                                android:layout_marginStart="32dp"-->
+                            <!--                                android:layout_marginTop="16dp"-->
+                            <!--                                android:src="@drawable/doctoricon"-->
+                            <!--                                app:layout_constraintStart_toStartOf="parent"-->
+                            <!--                                app:layout_constraintTop_toBottomOf="@id/info_frag_surgeon"-->
+                            <!--                                app:tint="@color/grey" />-->
+
+                            <!--                            <TextView-->
+                            <!--                                android:id="@+id/info_frag_nurse"-->
+                            <!--                                android:layout_width="wrap_content"-->
+                            <!--                                android:layout_height="wrap_content"-->
+                            <!--                                android:layout_marginStart="12dp"-->
+                            <!--                                android:text="Nurse"-->
+                            <!--                                android:textColor="@color/grey"-->
+                            <!--                                android:textSize="18sp"-->
+                            <!--                                app:layout_constraintBottom_toBottomOf="@id/info_frag_nurse_icon"-->
+                            <!--                                app:layout_constraintStart_toEndOf="@id/info_frag_nurse_icon"-->
+                            <!--                                app:layout_constraintTop_toTopOf="@id/info_frag_nurse_icon" />-->
+
+                            <!--                            <ImageView-->
+                            <!--                                android:id="@+id/info_frag_anesth_icon"-->
+                            <!--                                android:layout_width="40dp"-->
+                            <!--                                android:layout_height="40dp"-->
+                            <!--                                android:layout_marginStart="32dp"-->
+                            <!--                                android:layout_marginTop="16dp"-->
+                            <!--                                android:src="@drawable/doctoricon"-->
+                            <!--                                app:layout_constraintStart_toStartOf="parent"-->
+                            <!--                                app:layout_constraintTop_toBottomOf="@id/info_frag_nurse_icon"-->
+                            <!--                                app:tint="@color/grey" />-->
+
+                            <!--                            <TextView-->
+                            <!--                                android:id="@+id/info_frag_anesth"-->
+                            <!--                                android:layout_width="wrap_content"-->
+                            <!--                                android:layout_height="wrap_content"-->
+                            <!--                                android:layout_marginStart="12dp"-->
+                            <!--                                android:text="Anesthetist"-->
+                            <!--                                android:textColor="@color/grey"-->
+                            <!--                                android:textSize="18sp"-->
+                            <!--                                app:layout_constraintBottom_toBottomOf="@id/info_frag_anesth_icon"-->
+                            <!--                                app:layout_constraintStart_toEndOf="@id/info_frag_anesth_icon"-->
+                            <!--                                app:layout_constraintTop_toTopOf="@id/info_frag_anesth_icon" />-->
+
+                            <!--                            <ImageView-->
+                            <!--                                android:id="@+id/info_frag_registrar_icon"-->
+                            <!--                                android:layout_width="40dp"-->
+                            <!--                                android:layout_height="40dp"-->
+                            <!--                                android:layout_marginStart="32dp"-->
+                            <!--                                android:layout_marginTop="16dp"-->
+                            <!--                                android:layout_marginBottom="16dp"-->
+                            <!--                                android:src="@drawable/doctoricon"-->
+                            <!--                                app:layout_constraintBottom_toBottomOf="parent"-->
+                            <!--                                app:layout_constraintStart_toStartOf="parent"-->
+                            <!--                                app:layout_constraintTop_toBottomOf="@id/info_frag_anesth_icon"-->
+                            <!--                                app:tint="@color/grey" />-->
+
+                            <!--                            <TextView-->
+                            <!--                                android:id="@+id/info_frag_registrar"-->
+                            <!--                                android:layout_width="wrap_content"-->
+                            <!--                                android:layout_height="wrap_content"-->
+                            <!--                                android:layout_marginStart="12dp"-->
+                            <!--                                android:text="Registrar"-->
+                            <!--                                android:textColor="@color/grey"-->
+                            <!--                                android:textSize="18sp"-->
+                            <!--                                app:layout_constraintBottom_toBottomOf="@id/info_frag_registrar_icon"-->
+                            <!--                                app:layout_constraintStart_toEndOf="@id/info_frag_registrar_icon"-->
+                            <!--                                app:layout_constraintTop_toTopOf="@id/info_frag_registrar_icon" />-->
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -473,6 +626,8 @@
                             android:id="@+id/info_frag_comment_overview_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
                             app:layout_constraintTop_toBottomOf="@id/info_frag_staff_comments_divide">
 
                             <TextView
@@ -504,9 +659,9 @@
                                 android:layout_height="30dp"
                                 android:layout_marginStart="24dp"
                                 android:src="@drawable/comment_icon"
+                                app:layout_constraintBottom_toBottomOf="@id/first_comment"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="@id/first_comment"
-                                app:layout_constraintBottom_toBottomOf="@id/first_comment"/>
+                                app:layout_constraintTop_toTopOf="@id/first_comment" />
 
                             <TextView
                                 android:id="@+id/first_comment"
@@ -531,11 +686,6 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent">
 
-                                <!--                        <ImageView-->
-                                <!--                            android:layout_width="wrap_content"-->
-                                <!--                            android:layout_height="wrap_content"-->
-                                <!--                            android:src="@drawable/expand_less"/>-->
-
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -558,7 +708,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
-                            app:layout_constraintTop_toBottomOf="@id/info_frag_after_comment_divide"/>
+                            app:layout_constraintTop_toBottomOf="@id/info_frag_after_comment_divide" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -570,7 +720,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:alpha="1"
-                    android:background="@color/off_white"
+                    android:background="@color/white"
                     android:visibility="gone">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -583,6 +733,7 @@
                         app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
+                            android:id="@+id/info_frag_comments_expand_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -593,6 +744,28 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/info_frag_comments_bullet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:paddingVertical="14dp"
+                            android:text="\u2022"
+                            android:textSize="20sp"
+                            app:layout_constraintStart_toEndOf="@id/info_frag_comments_expand_title"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/num_of_comments_expand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toEndOf="@id/info_frag_comments_bullet"
+                            android:text="0"
+                            android:textSize="20sp"
+                            android:layout_marginStart="8dp"
+                            android:paddingVertical="14dp"
+                            app:layout_constraintTop_toTopOf="parent"/>
 
                         <ImageButton
                             android:id="@+id/close_comment_btn"
@@ -635,19 +808,24 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider"
+                        app:layout_constraintTop_toBottomOf="@id/comment_input_layout"/>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/comment_rv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toBottomOf="@+id/comment_input_layout" />
 
-<!--                    <View-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        app:layout_constraintTop_toBottomOf="@id/comment_rv"/>-->
+                    <!--                    <View-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="match_parent"-->
+                    <!--                        app:layout_constraintTop_toBottomOf="@id/comment_rv"/>-->
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
             </FrameLayout>

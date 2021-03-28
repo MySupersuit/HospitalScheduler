@@ -1,20 +1,16 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.utilities;
 
-import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
+import com.example.hospitalscheduler.R;
+import com.example.hospitalscheduler.objects.OperationV2;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static com.example.hospitalscheduler.Constants.*;
+import static com.example.hospitalscheduler.utilities.Constants.*;
 
 public final class Utilites {
 
@@ -51,12 +47,11 @@ public final class Utilites {
             case VASCULAR:
                 return "#E6E6FA";
             case ORTHO:
-                return "#FFFFFF";
+                return "#FFCC80";
             case UROLOGY:
                 return "#98FB98";
             default:
                 return "#FFFFFF";
-//                return "errorInUtilities";
         }
     }
 
@@ -71,7 +66,7 @@ public final class Utilites {
             case VASCULAR:
                 return "#a1a1af";
             case ORTHO:
-                return "#b2b2b2";
+                return "#FF9800";
             case UROLOGY:
                 return "#6bb06b";
             default:
