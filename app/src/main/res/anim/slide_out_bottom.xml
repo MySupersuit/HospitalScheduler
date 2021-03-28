@@ -4,4 +4,4 @@
     android:toYDelta="100%p"
     android:interpolator="@android:anim/linear_interpolator"
     android:fillAfter="true"
-    android:duration="@android:integer/config_mediumAnimTime"/>
+    android:duration="@android:integer/config_shortAnimTime"/>

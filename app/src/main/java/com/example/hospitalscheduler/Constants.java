@@ -14,4 +14,6 @@ public final class Constants {
     public static final String PAEDIATRICS = "Paediatrics";
     public static final String GYNO = "Gynaecology";
 
+    public static final int NUM_STAGES = 5;
+
 }

@@ -13,6 +13,7 @@
     <color name="eastern_blue">#17AFAB</color>
     <color name="blue_chill">#149C94</color>
     <color name="pewter">#B9B7BD</color>
+    <color name="light_grey">#B0B9B7BD</color>
     <color name="light_blue">#FFC1E1EC</color>
     <color name="middle_blue">#72bcd4</color>
     <color name="stage_blue_curr">#40C4FF</color>
@@ -22,4 +23,5 @@
     <color name="notify_yellow_start">#00FFEA00</color>
     <color name="transparent">#00000000</color>
     <color name="off_white">#F6F6F6</color>
+    <color name="notif_red">#FF5722</color>
 </resources>
