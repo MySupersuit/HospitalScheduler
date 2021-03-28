@@ -3,6 +3,10 @@ package com.example.hospitalscheduler.objects;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 public class OperationV2 implements Parcelable {
     public String anaesthetist;
     public String category;
@@ -18,6 +22,7 @@ public class OperationV2 implements Parcelable {
     public String scrubNurse;
     public String surgeon;
     public int theatre_number;
+    public List<Comment> comments;
 
     public OperationV2() {
         // necessary empty constructor
@@ -30,7 +35,7 @@ public class OperationV2 implements Parcelable {
                        String patient_name, String previous_op_id,
                        String procedure, String registrar,
                        String scrubNurse, String surgeon,
-                       int theatre_number) {
+                       int theatre_number, List<Comment> comments) {
         this.anaesthetist = anaesthetist;
         this.category = category;
         this.current_stage = current_stage;
@@ -45,6 +50,7 @@ public class OperationV2 implements Parcelable {
         this.scrubNurse = scrubNurse;
         this.surgeon = surgeon;
         this.theatre_number = theatre_number;
+        this.comments = comments;
     }
 
     // constructor without stage info
@@ -54,7 +60,7 @@ public class OperationV2 implements Parcelable {
                        String patient_name, String previous_op_id,
                        String procedure, String registrar,
                        String scrubNurse, String surgeon,
-                       int theatre_number) {
+                       int theatre_number, List<Comment> comments) {
         this.anaesthetist = anaesthetist;
         this.category = category;
         this.isCovid = isCovid;
@@ -66,11 +72,21 @@ public class OperationV2 implements Parcelable {
         this.scrubNurse = scrubNurse;
         this.surgeon = surgeon;
         this.theatre_number = theatre_number;
+        this.comments = comments;
 
-        this.id=id;
+        this.id = id;
         this.current_stage = 0;
         this.curr_stage_start_time = -1;
     }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
 
     public String getAnaesthetist() {
         return anaesthetist;
@@ -218,6 +234,7 @@ public class OperationV2 implements Parcelable {
         dest.writeString(this.scrubNurse);
         dest.writeString(this.surgeon);
         dest.writeInt(this.theatre_number);
+        dest.writeTypedList(this.comments);
     }
 
     protected OperationV2(Parcel in) {
@@ -235,6 +252,8 @@ public class OperationV2 implements Parcelable {
         this.scrubNurse = in.readString();
         this.surgeon = in.readString();
         this.theatre_number = in.readInt();
+        this.comments = new ArrayList<Comment>();
+        in.readTypedList(this.comments, Comment.CREATOR);
     }
 
 }

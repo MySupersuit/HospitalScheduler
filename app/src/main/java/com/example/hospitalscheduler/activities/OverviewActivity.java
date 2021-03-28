@@ -83,6 +83,10 @@ public class OverviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+
+//        writeInitDataDB();
+//        return;
+
         createNotificationChannel(); // DO AS SOON AS APP STARTS
         mContext = this;
 
@@ -233,7 +237,6 @@ public class OverviewActivity extends AppCompatActivity {
         // index of old operation in schedule
         int old_op_index = sched.indexOf(oldOp);
         // replace it with the new operation
-
         sched.set(old_op_index, op);
         OperatingTheatreV2 op1 = allOTs.get(updatedTheatre - 1);
 

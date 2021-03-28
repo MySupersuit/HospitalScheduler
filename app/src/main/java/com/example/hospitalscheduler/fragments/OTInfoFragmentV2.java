@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -36,9 +37,21 @@ import com.example.hospitalscheduler.R;
 import com.example.hospitalscheduler.adapters.CommentRecyclerViewAdapter;
 import com.example.hospitalscheduler.objects.Comment;
 import com.example.hospitalscheduler.objects.OperationV2;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static com.example.hospitalscheduler.utilities.Utilites.*;
 import static com.example.hospitalscheduler.utilities.Constants.*;
@@ -74,9 +87,10 @@ public class OTInfoFragmentV2 extends Fragment {
     ConstraintLayout top_section;
     EditText comment_input;
 
-    ArrayList<Comment> comments;
+    List<Comment> comments;
 
     TextView first_comment;
+    TextView first_comment_time;
     TextView num_of_comments;
     ImageView icon;
     TextView category;
@@ -85,8 +99,9 @@ public class OTInfoFragmentV2 extends Fragment {
     TextView covid_info_text;
     ImageView covid_icon;
     ScrollView scrollView;
-    TextView surgeon_tv;
+    TextView surgeon_tv, nurse_tv, anesth_tv, registrar_tv;
     ImageView surgeon_icon;
+
 
     ConstraintLayout stage1, stage2, stage3, stage4, stage5;
 
@@ -122,8 +137,6 @@ public class OTInfoFragmentV2 extends Fragment {
         if (getArguments() != null) {
             ot_num = getArguments().getInt(NUMBER);
             operation = getArguments().getParcelable(OPERATION);
-            Log.d("TET", this.operation.toString());
-            Log.d("TET", this.operation.getCategory());
         }
     }
 
@@ -140,17 +153,12 @@ public class OTInfoFragmentV2 extends Fragment {
         mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        comments = new ArrayList<>();
-        comments.add(new Comment("Slight delay in prepping but finished now", 10));
-        comments.add(new Comment("first", 1));
-        comments.add(new Comment("Oh boy this one's dying ngl", 2));
-        comments.add(new Comment("lmao", 3));
-        comments.add(new Comment("no I'm serious", 4));
-        Collections.sort(comments);
-        mAdapter = new CommentRecyclerViewAdapter(mContext, comments);
-
         OperationV2 curr_op = this.operation;
 
+        comments = new ArrayList<>(curr_op.comments);
+        Collections.sort(comments);
+
+        mAdapter = new CommentRecyclerViewAdapter(mContext, comments);
         mRecyclerView.setAdapter(mAdapter);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
@@ -172,6 +180,10 @@ public class OTInfoFragmentV2 extends Fragment {
         num_of_comments = view.findViewById(R.id.num_of_comments);
         num_of_comments.setText(String.valueOf(comments.size()));
         first_comment.setText(comments.get(0).getContent());
+        first_comment_time = view.findViewById(R.id.first_comment_time);
+
+        first_comment_time.setText(epochTimeToHourMin(comments.get(0).getTime()));
+
         close_comment_btn = view.findViewById(R.id.close_comment_btn);
         comment_input = view.findViewById(R.id.comment_input);
         category = view.findViewById(R.id.info_frag_category_tv);
@@ -181,7 +193,16 @@ public class OTInfoFragmentV2 extends Fragment {
         patient_name = view.findViewById(R.id.info_frag_patient_name);
         patient_name.setText(curr_op.getPatient_name());
         surgeon_icon = view.findViewById(R.id.info_frag_surgeon_icon);
+
         surgeon_tv = view.findViewById(R.id.info_frag_surgeon_tv);
+        surgeon_tv.setText(curr_op.getSurgeon());
+        nurse_tv = view.findViewById(R.id.info_frag_nurse_tv);
+        nurse_tv.setText(curr_op.getScrubNurse());
+        anesth_tv = view.findViewById(R.id.info_frag_anesth_tv);
+        anesth_tv.setText(curr_op.getAnaesthetist());
+        registrar_tv = view.findViewById(R.id.info_frag_registrar_tv);
+        registrar_tv.setText(curr_op.getRegistrar());
+
         header_layout = view.findViewById(R.id.ot_frag_header_info);
 
         // This works - would list still be better? depends on amount of staff
@@ -260,10 +281,11 @@ public class OTInfoFragmentV2 extends Fragment {
         // Keyboard comment enter handler
         comment_input.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
+
                 String text = comment_input.getText().toString();
+                long curr_sec = System.currentTimeMillis() / 1000L;
                 comment_input.setText("");
-                comments.add(new Comment(text, 50));
-                Collections.sort(comments);
+                addCommentToDatabase(text, curr_sec);
                 mAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -276,6 +298,27 @@ public class OTInfoFragmentV2 extends Fragment {
         covid_click.setOnClickListener(v -> handleCovidClick(container));
 
         return view;
+    }
+
+    private String timestampToTime(long time) {
+        Instant instant = Instant.ofEpochSecond(time);
+        Log.d("epoch", instant.toString());
+        Date d = new Date(time*1000);
+        String dateStr = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(d);
+        return dateStr;
+    }
+
+    private void addCommentToDatabase(String text, long time) {
+        String ot_num = String.valueOf(operation.getTheatre_number());
+        String op_id = operation.getId();
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://hospitalscheduler-41566-default-rtdb.europe-west1.firebasedatabase.app/");
+        DatabaseReference ref = database.getReference("operations")
+                .child(ot_num)
+                .child(op_id);
+
+        comments.add(new Comment(text, time));
+        ref.child("comments").setValue(comments);
+        Collections.sort(comments);
     }
 
     private void handleCommentOverviewClick(ViewGroup v) {
@@ -297,6 +340,12 @@ public class OTInfoFragmentV2 extends Fragment {
 
         TransitionManager.beginDelayedTransition(v, transition);
         comment_section.setVisibility(View.GONE);
+
+        InputMethodManager inputManager = (InputMethodManager)
+                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getView().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
 

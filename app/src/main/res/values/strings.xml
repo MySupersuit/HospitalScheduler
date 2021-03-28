@@ -35,4 +35,6 @@
     <string name="nurse_label">Nurse</string>
     <string name="anesth_label">Anesthetist</string>
     <string name="registrar_label">Registrar</string>
+    <string name="bullet">•</string>
+    <string name="mins_ago">%1s minutes ago</string>
 </resources>
