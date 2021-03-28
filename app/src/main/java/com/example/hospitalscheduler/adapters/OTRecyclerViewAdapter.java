@@ -151,14 +151,6 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
 
     }
 
-    // Assume more than 999 minutes is error
-    private String getMinutesSince(long timestamp) {
-        long curr_time = System.currentTimeMillis() / 1000L;
-        long difference = curr_time - timestamp;
-        int mins = (int) Math.ceil((double) difference / 60);
-        return (mins > 999) ? "0" : String.valueOf(mins);
-    }
-
     private void setStagesColour(TextView[] stages, OperationV2 curr_op, OperationV2 next_op,
                                  String curr_cat, String next_cat,
                                  TextView curr_op_header, TextView next_op_header,

@@ -1,6 +1,7 @@
 package com.example.hospitalscheduler.adapters;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.example.hospitalscheduler.R;
 import com.example.hospitalscheduler.objects.Comment;
 
 import java.util.List;
+import static com.example.hospitalscheduler.utilities.Utilites.*;
 
 public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecyclerViewAdapter.CommentViewHolder> {
 
@@ -40,8 +42,15 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     public void onBindViewHolder(@NonNull CommentRecyclerViewAdapter.CommentViewHolder holder, int position) {
         String comment = comments.get(position).getContent();
         long time = comments.get(position).getTime();
+
+        String hour_min = epochTimeToHourMin(time);
+        String mins_since = getMinutesSince(time);
+
+        Resources res = mContext.getResources();
+
         holder.comment_tv.setText(comment);
-        holder.time_tv.setText(String.valueOf(time));
+        holder.time_tv.setText(hour_min);
+        holder.time_since.setText(res.getString(R.string.mins_ago, mins_since));
     }
 
     @Override
@@ -51,12 +60,13 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
     public static class CommentViewHolder extends RecyclerView.ViewHolder {
         TextView comment_tv;
-        TextView time_tv;
+        TextView time_tv, time_since;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
             comment_tv = (TextView) itemView.findViewById(R.id.comment_text);
             time_tv = (TextView) itemView.findViewById(R.id.comment_time);
+            time_since = (TextView) itemView.findViewById(R.id.comment_time_since);
         }
     }
 

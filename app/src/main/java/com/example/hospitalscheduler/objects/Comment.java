@@ -7,7 +7,11 @@ public class Comment implements Parcelable, Comparable<Comment> {
     private String content;
     private long time;
 
-    public Comment(String content, int time) {
+    public Comment() {
+        // necessary no comment constructor
+    }
+
+    public Comment(String content, long time) {
         this.content = content;
         this.time = time;
     }
