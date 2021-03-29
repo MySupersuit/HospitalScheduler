@@ -15,5 +15,9 @@ public final class Constants {
     public static final String GYNO = "Gynaecology";
 
     public static final int NUM_STAGES = 5;
-
+    public static final int SECONDS_IN_MIN = 60;
+    public static final int SECONDS_IN_HOUR = 3600;
+    public static final int SECONDS_IN_DAY = 86400;
+    public static final int SECONDS_IN_30DAYS = SECONDS_IN_DAY * 30;
+    public static final int SECONDS_IN_YEAR = SECONDS_IN_DAY * 365;
 }

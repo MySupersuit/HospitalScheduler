@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,7 @@ import com.example.hospitalscheduler.adapters.ScheduleRecyclerViewAdapter;
 import com.example.hospitalscheduler.objects.OperationV2;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,9 +79,6 @@ public class OTScheduleFragment extends Fragment {
 
         this.mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        schedule.add(0, new OperationV2());
-        schedule.add(0,new OperationV2());
-        schedule.add(0,new OperationV2());
         this.mAdapter = new ScheduleRecyclerViewAdapter(mContext, schedule);
 
         mRecyclerView.setAdapter(mAdapter);

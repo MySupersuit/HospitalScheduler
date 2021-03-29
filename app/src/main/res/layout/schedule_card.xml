@@ -6,27 +6,48 @@
     android:layout_width="match_parent"
     android:layout_height="230dp"
     android:paddingVertical="10dp">
-<!--    android:layout_marginVertical="10dp">-->
+    <!--    android:layout_marginVertical="10dp">-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sched_frag_external_markers"
         android:layout_width="50dp"
         android:layout_height="match_parent"
-        cardview:layout_constraintStart_toStartOf="parent"
+        android:background="@color/white"
         android:elevation="50dp"
-        android:background="@color/white">
+        cardview:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sched_card_padding_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            cardview:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="4dp"
+                android:text="@string/bullet"
+                android:textColor="@color/transparent"
+                android:textSize="15sp"
+                cardview:layout_constraintStart_toStartOf="parent"
+                cardview:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            cardview:layout_constraintBottom_toBottomOf="parent"
+            cardview:layout_constraintTop_toBottomOf="@id/sched_card_padding_cl">
 
             <View
                 android:id="@+id/sched_frag_curr_marker1"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
             <View
                 android:id="@+id/sched_frag_curr_marker2"
@@ -40,21 +61,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
             <View
                 android:id="@+id/sched_frag_curr_marker4"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
             <View
                 android:id="@+id/sched_frag_curr_marker5"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/white"/>
+                android:background="@color/white" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -67,8 +88,8 @@
         android:layout_marginHorizontal="50dp"
         android:elevation="0dp"
         cardview:cardCornerRadius="0dp"
-        cardview:cardUseCompatPadding="false"
         cardview:cardPreventCornerOverlap="true"
+        cardview:cardUseCompatPadding="false"
         cardview:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -77,11 +98,62 @@
             android:background="@color/white">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/sched_card_header_cl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/top_rounded"
+                cardview:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    cardview:layout_constraintEnd_toEndOf="parent"
+                    cardview:layout_constraintStart_toStartOf="parent">
+
+                    <TextView
+                        android:id="@+id/sched_frag_header_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent"
+                        tools:text="Category" />
+
+                    <TextView
+                        android:id="@+id/sched_frag_header_bullet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:text="@string/bullet"
+                        android:textSize="15sp"
+                        cardview:layout_constraintStart_toEndOf="@id/sched_frag_header_category"
+                        cardview:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/sched_frag_header_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="4dp"
+                        cardview:layout_constraintBottom_toBottomOf="parent"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintStart_toEndOf="@id/sched_frag_header_bullet"
+                        cardview:layout_constraintTop_toTopOf="parent"
+                        tools:src="@drawable/humanbrain" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/sched_frag_stage_cl"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                cardview:layout_constraintBottom_toBottomOf="parent"
                 cardview:layout_constraintStart_toStartOf="parent"
-                cardview:layout_constraintTop_toTopOf="parent">
+                cardview:layout_constraintTop_toBottomOf="@id/sched_card_header_cl">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -96,6 +168,7 @@
                         android:background="@color/white"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/sched_frag_stage_padding"
+                        android:paddingBottom="4dp"
                         android:text="@string/_1"
                         android:textSize="@dimen/sched_frag_stage_text_size"
                         android:textStyle="bold" />
@@ -108,6 +181,7 @@
                         android:background="@color/white"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/sched_frag_stage_padding"
+                        android:paddingBottom="4dp"
                         android:text="@string/_2"
                         android:textSize="@dimen/sched_frag_stage_text_size"
                         android:textStyle="bold" />
@@ -120,6 +194,7 @@
                         android:background="@color/white"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/sched_frag_stage_padding"
+                        android:paddingBottom="4dp"
                         android:text="@string/_3"
                         android:textSize="@dimen/sched_frag_stage_text_size"
                         android:textStyle="bold" />
@@ -132,6 +207,7 @@
                         android:background="@color/white"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/sched_frag_stage_padding"
+                        android:paddingBottom="4dp"
                         android:text="@string/_4"
                         android:textSize="@dimen/sched_frag_stage_text_size"
                         android:textStyle="bold" />
@@ -144,6 +220,7 @@
                         android:background="@color/white"
                         android:gravity="center"
                         android:paddingHorizontal="@dimen/sched_frag_stage_padding"
+                        android:paddingBottom="4dp"
                         android:text="@string/_5"
                         android:textSize="@dimen/sched_frag_stage_text_size"
                         android:textStyle="bold" />
@@ -154,17 +231,18 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                cardview:layout_constraintBottom_toBottomOf="parent"
                 cardview:layout_constraintEnd_toEndOf="parent"
                 cardview:layout_constraintStart_toEndOf="@id/sched_frag_stage_cl"
-                cardview:layout_constraintTop_toTopOf="parent">
+                cardview:layout_constraintTop_toBottomOf="@id/sched_card_header_cl">
 
                 <View
                     android:id="@+id/sched_frag_back_colour"
                     android:layout_width="match_parent"
-                    android:background="#CCECC1"
-                    android:layout_height="match_parent"/>
-
+                    android:layout_height="match_parent"
+                    android:alpha="0.3"
+                    android:background="#CCECC1" />
 
                 <ImageView
                     android:id="@+id/sched_frag_back_icon"
@@ -174,15 +252,137 @@
                     android:alpha="0.1"
                     android:padding="12dp"
                     android:scaleType="centerCrop"
-                    cardview:layout_constraintTop_toTopOf="parent"
                     cardview:layout_constraintBottom_toBottomOf="parent"
-                    cardview:layout_constraintStart_toStartOf="parent"/>
+                    cardview:layout_constraintStart_toStartOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#EF9A9A"
-                    android:alpha="0.3"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="16dp"
+                    cardview:layout_constraintBottom_toBottomOf="parent"
+                    cardview:layout_constraintEnd_toEndOf="parent"
+                    cardview:layout_constraintStart_toStartOf="parent"
+                    cardview:layout_constraintTop_toTopOf="parent">
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sched_frag_proc_cl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/sched_frag_procedure_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/procedure"
+                            android:textSize="@dimen/small_description"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/sched_frag_procedure_tv"
+                            android:layout_width="@dimen/sched_frag_info_text_width"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:textColor="@color/grey"
+                            android:textSize="14sp"
+                            cardview:layout_constraintEnd_toEndOf="parent"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toBottomOf="@id/sched_frag_procedure_label"
+                            tools:text="Mild Mildness" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sched_frag_patient_name_cl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        cardview:layout_constraintBottom_toBottomOf="parent"
+                        cardview:layout_constraintStart_toStartOf="parent">
+
+                        <TextView
+                            android:id="@+id/sched_frag_patient_name_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/patient"
+                            android:textSize="@dimen/small_description"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/sched_frag_patient_name_tv"
+                            android:layout_width="@dimen/sched_frag_info_text_width"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/grey"
+                            android:textSize="14sp"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toBottomOf="@id/sched_frag_patient_name_label"
+                            tools:text="Tim Key" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sched_frag_surgeon_cl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        cardview:layout_constraintBottom_toTopOf="@+id/sched_frag_patient_name_cl"
+                        cardview:layout_constraintStart_toStartOf="parent"
+                        cardview:layout_constraintTop_toBottomOf="@id/sched_frag_proc_cl">
+
+                        <TextView
+                            android:id="@+id/sched_frag_surgeon_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/surgeon_label"
+                            android:textSize="@dimen/small_description"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/sched_frag_surgeon_tv"
+                            android:layout_width="@dimen/sched_frag_info_text_width"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/grey"
+                            android:textSize="14sp"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toBottomOf="@id/sched_frag_surgeon_label"
+                            tools:text="Dr. Hibbert" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/sched_frag_nurse_cl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        cardview:layout_constraintEnd_toEndOf="parent"
+                        cardview:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/sched_frag_nurse_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nurse_label"
+                            android:textSize="@dimen/small_description"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/sched_frag_nurse_tv"
+                            android:layout_width="@dimen/sched_frag_info_text_width"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/grey"
+                            android:textSize="14sp"
+                            cardview:layout_constraintStart_toStartOf="parent"
+                            cardview:layout_constraintTop_toBottomOf="@id/sched_frag_nurse_label"
+                            tools:text="Nurse Rachet" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

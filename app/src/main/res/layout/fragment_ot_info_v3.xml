@@ -390,7 +390,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:text="@string/surgeon_label"
-                                    android:textSize="10sp"
+                                    android:textSize="@dimen/small_description"
                                     app:layout_constraintBottom_toTopOf="@id/info_frag_surgeon_tv"
                                     app:layout_constraintStart_toEndOf="@id/info_frag_surgeon_icon"
                                     app:layout_constraintTop_toTopOf="parent" />
@@ -433,7 +433,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:text="@string/nurse_label"
-                                    android:textSize="10sp"
+                                    android:textSize="@dimen/small_description"
                                     app:layout_constraintBottom_toTopOf="@id/info_frag_nurse_tv"
                                     app:layout_constraintStart_toEndOf="@id/info_frag_nurse_icon"
                                     app:layout_constraintTop_toTopOf="parent" />
@@ -476,7 +476,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:text="@string/anesth_label"
-                                    android:textSize="10sp"
+                                    android:textSize="@dimen/small_description"
                                     app:layout_constraintBottom_toTopOf="@id/info_frag_anesth_tv"
                                     app:layout_constraintStart_toEndOf="@id/info_frag_anesth_icon"
                                     app:layout_constraintTop_toTopOf="parent" />
@@ -521,7 +521,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:text="@string/registrar_label"
-                                    android:textSize="10sp"
+                                    android:textSize="@dimen/small_description"
                                     app:layout_constraintBottom_toTopOf="@id/info_frag_registrar_tv"
                                     app:layout_constraintStart_toEndOf="@id/info_frag_registrar_icon"
                                     app:layout_constraintTop_toTopOf="parent" />

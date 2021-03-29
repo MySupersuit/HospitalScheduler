@@ -36,5 +36,8 @@
     <string name="anesth_label">Anesthetist</string>
     <string name="registrar_label">Registrar</string>
     <string name="bullet">•</string>
-    <string name="mins_ago">%1s minutes ago</string>
+    <string name="mins_ago">%1s ago</string>
+    <string name="procedure">Procedure</string>
+    <string name="patient">Patient</string>
+    <string name="no_comments">No comments yet!</string>
 </resources>

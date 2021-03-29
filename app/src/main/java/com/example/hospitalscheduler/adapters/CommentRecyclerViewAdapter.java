@@ -43,14 +43,15 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
         String comment = comments.get(position).getContent();
         long time = comments.get(position).getTime();
 
-        String hour_min = epochTimeToHourMin(time);
+        String hour_min = epochTimeToDateHourMin(time);
         String mins_since = getMinutesSince(time);
+        String time_since = timeSince(time);
 
         Resources res = mContext.getResources();
 
         holder.comment_tv.setText(comment);
         holder.time_tv.setText(hour_min);
-        holder.time_since.setText(res.getString(R.string.mins_ago, mins_since));
+        holder.time_since.setText(res.getString(R.string.mins_ago, time_since));
     }
 
     @Override

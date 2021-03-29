@@ -120,12 +120,41 @@ public final class Utilites {
         return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(d);
     }
 
+    public static String epochTimeToDateHourMin(long time) {
+        Date d = new Date(time*1000);
+        return new SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(d);
+    }
+
     // Assume more than 999 minutes is error
     public static String getMinutesSince(long timestamp) {
         long curr_time = System.currentTimeMillis() / 1000L;
         long difference = curr_time - timestamp;
         int mins = (int) Math.ceil((double) difference / 60);
         return (mins > 999) ? "0" : String.valueOf(mins);
+    }
+
+    public static String timeSince(long timestamp) {
+        long curr_time = System.currentTimeMillis() / 1000L;
+        long sec_difference = curr_time - timestamp;
+        if (sec_difference < SECONDS_IN_MIN) return sec_difference + " seconds ";
+        if (sec_difference < SECONDS_IN_HOUR) {
+            int mins = (int) Math.ceil((double) sec_difference / SECONDS_IN_MIN);
+            return mins + " minutes";
+        }
+        if (sec_difference < SECONDS_IN_DAY) {
+            int hours = (int) Math.ceil((double) sec_difference / SECONDS_IN_HOUR);
+            return hours + " hours";
+        }
+        if (sec_difference < SECONDS_IN_30DAYS) {
+            int days = (int) Math.ceil((double) sec_difference / SECONDS_IN_DAY);
+            return (days > 1) ? " days" : " day";
+        }
+        if (sec_difference < SECONDS_IN_YEAR) {
+            int months = (int) Math.ceil((double) sec_difference / SECONDS_IN_30DAYS);
+            return (months > 1) ? " months" : " month";
+        }
+        return "Years";
+
     }
 
     public static void writeInitDataDB() {
@@ -136,7 +165,7 @@ public final class Utilites {
         DatabaseReference ot1ref = ref.child("1");
 
         ArrayList<Comment> commentsTest = new ArrayList<>();
-        commentsTest.add(new Comment("test", -1));
+//        commentsTest.add(new Comment("test", -1));
 
         String op11Key = ot1ref.push().getKey();
 
@@ -158,6 +187,25 @@ public final class Utilites {
                 "Dr. John Zoidberg", 1, commentsTest);
 
         ot1ref.child(op12Key).setValue(op12);
+
+        String op13Key = ot1ref.push().getKey();
+        OperationV2 op13 = new OperationV2("Suri", HEAD_AND_NECK,
+                op13Key,
+                0,0,"Sam Shephard",
+                op12Key, "Lower impacted wisdom tooth extraction",
+                "Greg", "Ted",
+                "Dr. Julius Hibbert", 1, commentsTest);
+
+        ot1ref.child(op13Key).setValue(op13);
+
+        String op14Key = ot1ref.push().getKey();
+        OperationV2 op14 = new OperationV2("Jack", ORTHO,
+                op14Key,
+                1,0,"Doc Torrance",
+                op13Key, "Visions of Tony",
+                "Matt", "Carla",
+                "Dr. Strangelove", 1, commentsTest);
+        ot1ref.child(op14Key).setValue(op14);
 
         // OT 2
         DatabaseReference ot2ref = ref.child("2");

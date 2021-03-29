@@ -18,6 +18,7 @@ import androidx.transition.Slide;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -91,7 +92,7 @@ public class OTInfoFragmentV2 extends Fragment {
 
     TextView first_comment;
     TextView first_comment_time;
-    TextView num_of_comments;
+    TextView num_of_comments, num_of_comments_expand;
     ImageView icon;
     TextView category;
     TextView ot_num_tv, procedure, patient_name;
@@ -179,13 +180,19 @@ public class OTInfoFragmentV2 extends Fragment {
         first_comment = view.findViewById(R.id.first_comment);
         num_of_comments = view.findViewById(R.id.num_of_comments);
         num_of_comments.setText(String.valueOf(comments.size()));
-        first_comment.setText(comments.get(0).getContent());
+        num_of_comments_expand = view.findViewById(R.id.num_of_comments_expand);
+        num_of_comments_expand.setText(String.valueOf(comments.size()));
         first_comment_time = view.findViewById(R.id.first_comment_time);
-
-        first_comment_time.setText(epochTimeToHourMin(comments.get(0).getTime()));
+        if (comments.size() > 0) {
+            first_comment.setText(comments.get(0).getContent());
+            first_comment_time.setText(epochTimeToHourMin(comments.get(0).getTime()));
+        } else {
+            first_comment.setText(getString(R.string.no_comments));
+        }
 
         close_comment_btn = view.findViewById(R.id.close_comment_btn);
         comment_input = view.findViewById(R.id.comment_input);
+        comment_input.setRawInputType(InputType.TYPE_CLASS_TEXT);
         category = view.findViewById(R.id.info_frag_category_tv);
         category.setText(op_cat);
         ot_num_tv = view.findViewById(R.id.info_frag_ot_num);
@@ -285,8 +292,15 @@ public class OTInfoFragmentV2 extends Fragment {
                 String text = comment_input.getText().toString();
                 long curr_sec = System.currentTimeMillis() / 1000L;
                 comment_input.setText("");
+                closeKeyboard();
                 addCommentToDatabase(text, curr_sec);
                 mAdapter.notifyDataSetChanged();
+
+                first_comment.setText(text);
+                first_comment_time.setText(epochTimeToHourMin(curr_sec));
+                num_of_comments.setText(String.valueOf(comments.size()));
+                num_of_comments_expand.setText(String.valueOf(comments.size()));
+
                 return true;
             }
             return false;
@@ -300,13 +314,6 @@ public class OTInfoFragmentV2 extends Fragment {
         return view;
     }
 
-    private String timestampToTime(long time) {
-        Instant instant = Instant.ofEpochSecond(time);
-        Log.d("epoch", instant.toString());
-        Date d = new Date(time*1000);
-        String dateStr = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(d);
-        return dateStr;
-    }
 
     private void addCommentToDatabase(String text, long time) {
         String ot_num = String.valueOf(operation.getTheatre_number());
@@ -340,10 +347,12 @@ public class OTInfoFragmentV2 extends Fragment {
 
         TransitionManager.beginDelayedTransition(v, transition);
         comment_section.setVisibility(View.GONE);
+        closeKeyboard();
+    }
 
+    private void closeKeyboard() {
         InputMethodManager inputManager = (InputMethodManager)
                 mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-
         inputManager.hideSoftInputFromWindow(getView().getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
     }
