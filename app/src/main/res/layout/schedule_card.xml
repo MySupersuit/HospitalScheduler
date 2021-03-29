@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sched_frag_external_markers"
-        android:layout_width="50dp"
+        android:layout_width="40dp"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:elevation="50dp"
@@ -85,7 +85,7 @@
         android:id="@+id/sched_cardview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="50dp"
+        android:layout_marginHorizontal="40dp"
         android:elevation="0dp"
         cardview:cardCornerRadius="0dp"
         cardview:cardPreventCornerOverlap="true"
@@ -268,7 +268,7 @@
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/sched_frag_proc_cl"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         cardview:layout_constraintStart_toStartOf="parent"
                         cardview:layout_constraintTop_toTopOf="parent">
@@ -284,13 +284,12 @@
 
                         <TextView
                             android:id="@+id/sched_frag_procedure_tv"
-                            android:layout_width="@dimen/sched_frag_info_text_width"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
                             android:textColor="@color/grey"
                             android:textSize="14sp"
-                            cardview:layout_constraintEnd_toEndOf="parent"
                             cardview:layout_constraintStart_toStartOf="parent"
                             cardview:layout_constraintTop_toBottomOf="@id/sched_frag_procedure_label"
                             tools:text="Mild Mildness" />
@@ -348,9 +347,11 @@
                             android:layout_height="wrap_content"
                             android:textColor="@color/grey"
                             android:textSize="14sp"
+                            android:maxLines="1"
+                            android:autoSizeTextType="uniform"
                             cardview:layout_constraintStart_toStartOf="parent"
                             cardview:layout_constraintTop_toBottomOf="@id/sched_frag_surgeon_label"
-                            tools:text="Dr. Hibbert" />
+                            tools:text="Dr. Hugo strangelove" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -359,8 +360,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         cardview:layout_constraintEnd_toEndOf="parent"
-                        cardview:layout_constraintTop_toTopOf="parent">
-
+                        cardview:layout_constraintTop_toTopOf="@id/sched_frag_surgeon_cl"
+                        cardview:layout_constraintBottom_toBottomOf="@id/sched_frag_surgeon_cl">
                         <TextView
                             android:id="@+id/sched_frag_nurse_label"
                             android:layout_width="wrap_content"

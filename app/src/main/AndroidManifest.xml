@@ -10,26 +10,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HospitalScheduler">
 
-        <activity android:name=".loginActivity">
+        <activity android:name=".activities.loginActivity">
             <!--Open the app with the login screen-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <category android:name="android.intent.category.DEFAULT" />
-
             </intent-filter>
+
         </activity>
         <activity
-            android:name=".Operation_Info_Tab_Activity"
-            android:parentActivityName=".Overview">
+            android:name=".activities.Operation_Info_Tab_Activity"
+            android:parentActivityName=".activities.OverviewActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Overview" />
+                android:value=".activities.OverviewActivity" />
 
         </activity>
         <activity
-            android:name=".Overview"
+            android:name=".activities.OverviewActivity"
             android:launchMode="singleTop">
         </activity>
 
@@ -45,7 +45,7 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/light_blue" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".activities.MainActivity" />
     </application>
 
 </manifest>

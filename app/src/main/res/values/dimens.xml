@@ -13,7 +13,7 @@
     <dimen name="stage_divider_width">2dp</dimen>
     <dimen name="stage_divider_margin_vert">3dp</dimen>
     <dimen name="sched_frag_stage_text_size">25sp</dimen>
-    <dimen name="sched_frag_stage_padding">15dp</dimen>
+    <dimen name="sched_frag_stage_padding">10dp</dimen>
     <dimen name="small_description">12sp</dimen>
     <dimen name="sched_frag_info_text_width">100dp</dimen>
 </resources>
