@@ -320,9 +320,12 @@ public class OTInfoFragmentV2 extends Fragment {
                 stages[NUM_STAGES-1].setBackground(wrappedDrawable2);
                 stageTvs[NUM_STAGES-1].setTextColor(white);
                 break;
-            default:
-                stages[operation.getCurrent_stage()-1].setBackgroundColor(sec_colour);
-                stageTvs[operation.getCurrent_stage()-1].setTextColor(white);
+            case 2:
+            case 3:
+            case 4:
+                 stages[operation.getCurrent_stage() - 1].setBackgroundColor(sec_colour);
+                 stageTvs[operation.getCurrent_stage() - 1].setTextColor(white);
+                 break;
         }
 
         header_layout.setBackgroundColor(cat_colour);
