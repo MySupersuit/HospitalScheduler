@@ -13,6 +13,7 @@ public final class Constants {
     public static final String PLASTICS = "Plastics";
     public static final String PAEDIATRICS = "Paediatrics";
     public static final String GYNO = "Gynaecology";
+    public static final String NO_OP = "No Operation";
 
     public static final int NUM_STAGES = 5;
     public static final int SECONDS_IN_MIN = 60;

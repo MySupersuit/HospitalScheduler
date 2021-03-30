@@ -21,7 +21,9 @@ import com.example.hospitalscheduler.objects.OperationV2;
 import com.example.hospitalscheduler.R;
 
 import java.util.ArrayList;
+
 import static com.example.hospitalscheduler.utilities.Utilites.*;
+import static com.example.hospitalscheduler.utilities.Constants.*;
 
 public class ScheduleRecyclerViewAdapter extends RecyclerView.Adapter<ScheduleRecyclerViewAdapter.SchedViewHolder> {
 
@@ -66,15 +68,31 @@ public class ScheduleRecyclerViewAdapter extends RecyclerView.Adapter<ScheduleRe
         holder.surgeon.setText(op.getSurgeon());
         holder.patient.setText(op.getPatient_name());
         holder.nurse.setText(op.getScrubNurse());
+        holder.covid.setText((op.getIsCovid() == 1) ? "Yes" : "No");
 
     }
 
     private void setStages(View[] marks, TextView[] stages, OperationV2 op) {
         int curr_sched_red = ContextCompat.getColor(mContext, R.color.curr_sched_red);
+        int cat_colour = Color.parseColor(categoryToColour(op.getCategory()));
+        int text_colour = Color.parseColor(categoryToTextColour(op.getCategory()));
+        int white = ContextCompat.getColor(mContext, R.color.white);
+
+        Log.d("CURR", String.valueOf(op.getCurrent_stage()));
+
+        for (int i = 0; i < op.getCurrent_stage() && i < NUM_STAGES; i++) {
+            stages[i].setBackgroundColor(cat_colour);
+            stages[i].setTextColor(text_colour);
+        }
 
         if (op.getCurrent_stage() > 0 && op.getCurrent_stage() < 6) {
-            marks[op.getCurrent_stage()-1].setBackgroundColor(curr_sched_red);
-            stages[op.getCurrent_stage()-1].setBackgroundColor(curr_sched_red);
+            marks[op.getCurrent_stage() - 1].setBackgroundColor(curr_sched_red);
+            stages[op.getCurrent_stage() - 1].setBackgroundColor(curr_sched_red);
+            stages[op.getCurrent_stage() - 1].setTextColor(white);
+        }
+
+        for (int i = NUM_STAGES - 1; i >= op.getCurrent_stage(); i--) {
+            stages[i].setAlpha(0.3f);
         }
     }
 
@@ -84,7 +102,7 @@ public class ScheduleRecyclerViewAdapter extends RecyclerView.Adapter<ScheduleRe
     }
 
     public static class SchedViewHolder extends RecyclerView.ViewHolder {
-//        TextView testText;
+        //        TextView testText;
         View mark1, mark2, mark3, mark4, mark5;
         TextView stage1, stage2, stage3, stage4, stage5;
 
@@ -92,7 +110,7 @@ public class ScheduleRecyclerViewAdapter extends RecyclerView.Adapter<ScheduleRe
         ImageView header_icon;
         ConstraintLayout header_cl;
         View back_colour;
-        TextView procedure, surgeon, patient, nurse;
+        TextView procedure, surgeon, patient, nurse, covid;
 
         public SchedViewHolder(View itemView) {
             super(itemView);
@@ -118,6 +136,7 @@ public class ScheduleRecyclerViewAdapter extends RecyclerView.Adapter<ScheduleRe
             patient = itemView.findViewById(R.id.sched_frag_patient_name_tv);
             surgeon = itemView.findViewById(R.id.sched_frag_surgeon_tv);
             nurse = itemView.findViewById(R.id.sched_frag_nurse_tv);
+            covid = itemView.findViewById(R.id.sched_frag_covid_tv);
         }
     }
 }

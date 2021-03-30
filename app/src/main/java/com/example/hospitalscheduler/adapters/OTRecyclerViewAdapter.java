@@ -27,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONObject;
 
 import static com.example.hospitalscheduler.utilities.Utilites.*;
+import static com.example.hospitalscheduler.utilities.Constants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,6 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
     private Context mContext;
     //    private ArrayList<OperatingTheatre> operatingTheatres; // list of objects going into recycler view
     private ArrayList<OperatingTheatreV2> operatingTheatresV2;
-    private static final int NUM_STAGES = 5;
     private OverviewOnClickListener ovcl;
 
     public OTRecyclerViewAdapter(Context mContext, ArrayList<OperatingTheatreV2> operatingTheatresV2, OverviewOnClickListener c) {
@@ -64,10 +64,15 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
 
         Log.d("NUM", String.valueOf(position));
         OperatingTheatreV2 ot = operatingTheatresV2.get(position);
-        OperationV2 curr_op = ot.getSchedule().get(0);
-        OperationV2 next_op = null;
-        if (ot.getSchedule().size() > 1) {
-            next_op = ot.getSchedule().get(1);
+
+        OperationV2 curr_op = getCurrentOperation(ot.getSchedule());
+        OperationV2 next_op = getNextOperation(ot.getSchedule(), curr_op);
+
+        if (curr_op == null) {
+            curr_op = new OperationV2(ot.getNumber());
+        }
+        if (next_op == null) {
+            next_op = new OperationV2(ot.getNumber());
         }
 
         holder.ot_num.setText("OT " + ot.getNumber());
@@ -180,7 +185,7 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
         }
 
         // Current Operation first
-        if (curr_op.getCurrent_stage() > 0) {
+        if (curr_op.getCurrent_stage() > 0 && curr_op.getCurrent_stage() < NUM_STAGES+1) {
             stages[curr_op.getCurrent_stage() - 1].setBackgroundColor(curr_op_sec_col);
             stages[curr_op.getCurrent_stage() - 1].setTextColor(white);
             stages[curr_op.getCurrent_stage() - 1].setAlpha(1f);
