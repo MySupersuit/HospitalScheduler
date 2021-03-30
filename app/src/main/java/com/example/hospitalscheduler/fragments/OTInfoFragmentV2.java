@@ -1,35 +1,61 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.Slide;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
 
+import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.example.hospitalscheduler.R;
+import com.example.hospitalscheduler.adapters.CommentRecyclerViewAdapter;
+import com.example.hospitalscheduler.objects.Comment;
+import com.example.hospitalscheduler.objects.OperationV2;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import static com.example.hospitalscheduler.Utilites.*;
-import static com.example.hospitalscheduler.Constants.*;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.TemporalField;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import static com.example.hospitalscheduler.utilities.Utilites.*;
+import static com.example.hospitalscheduler.utilities.Constants.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,9 +87,12 @@ public class OTInfoFragmentV2 extends Fragment {
     ConstraintLayout bottom_info_section;
     ConstraintLayout top_section;
     EditText comment_input;
-    ArrayList<String> comments;
+
+    List<Comment> comments;
+
     TextView first_comment;
-    TextView num_of_comments;
+    TextView first_comment_time;
+    TextView num_of_comments, num_of_comments_expand;
     ImageView icon;
     TextView category;
     TextView ot_num_tv, procedure, patient_name;
@@ -71,12 +100,12 @@ public class OTInfoFragmentV2 extends Fragment {
     TextView covid_info_text;
     ImageView covid_icon;
     ScrollView scrollView;
-    TextView surgeon_tv;
+    TextView surgeon_tv, nurse_tv, anesth_tv, registrar_tv;
     ImageView surgeon_icon;
 
 
-
     ConstraintLayout stage1, stage2, stage3, stage4, stage5;
+
 
     public OTInfoFragmentV2() {
         // Required empty public constructor
@@ -96,8 +125,7 @@ public class OTInfoFragmentV2 extends Fragment {
         OTInfoFragmentV2 fragment = new OTInfoFragmentV2();
         Bundle args = new Bundle();
         args.putInt(NUMBER, number);
-//        args.putParcelableArrayList(SCHEDULE, schedule);
-//        args.putInt(NOTIFIED, isNotified);
+
         args.putParcelable(OPERATION, operation);
         fragment.setArguments(args);
         return fragment;
@@ -110,8 +138,6 @@ public class OTInfoFragmentV2 extends Fragment {
         if (getArguments() != null) {
             ot_num = getArguments().getInt(NUMBER);
             operation = getArguments().getParcelable(OPERATION);
-            Log.d("TET", this.operation.toString());
-            Log.d("TET", this.operation.getCategory());
         }
     }
 
@@ -128,20 +154,19 @@ public class OTInfoFragmentV2 extends Fragment {
         mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        comments = new ArrayList<>();
-        comments.add("Slight delay in prepping but finished now");
-        comments.add("first");
-        comments.add("Oh boy this one's dying ngl");
-        comments.add("lmao");
-        comments.add("no I'm serious");
+        OperationV2 curr_op = this.operation;
+
+        comments = new ArrayList<>(curr_op.comments);
+        Collections.sort(comments);
+
         mAdapter = new CommentRecyclerViewAdapter(mContext, comments);
-
-//        OperationV2 curr = this.schedule.get(0);
-        OperationV2 curr = this.operation;
-
         mRecyclerView.setAdapter(mAdapter);
 
-        String op_cat = curr.getCategory();
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        String op_cat = curr_op.getCategory();
 
         scrollView = view.findViewById(R.id.info_frag_scroll_view);
 
@@ -155,17 +180,36 @@ public class OTInfoFragmentV2 extends Fragment {
         first_comment = view.findViewById(R.id.first_comment);
         num_of_comments = view.findViewById(R.id.num_of_comments);
         num_of_comments.setText(String.valueOf(comments.size()));
-        first_comment.setText(comments.get(0));
+        num_of_comments_expand = view.findViewById(R.id.num_of_comments_expand);
+        num_of_comments_expand.setText(String.valueOf(comments.size()));
+        first_comment_time = view.findViewById(R.id.first_comment_time);
+        if (comments.size() > 0) {
+            first_comment.setText(comments.get(0).getContent());
+            first_comment_time.setText(epochTimeToHourMin(comments.get(0).getTime()));
+        } else {
+            first_comment.setText(getString(R.string.no_comments));
+        }
+
         close_comment_btn = view.findViewById(R.id.close_comment_btn);
         comment_input = view.findViewById(R.id.comment_input);
-        category = (TextView) view.findViewById(R.id.info_frag_category_tv);
+        comment_input.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        category = view.findViewById(R.id.info_frag_category_tv);
         category.setText(op_cat);
         ot_num_tv = view.findViewById(R.id.info_frag_ot_num);
         ot_num_tv.setText("OT " + ot_num);
         patient_name = view.findViewById(R.id.info_frag_patient_name);
-        patient_name.setText(curr.getPatient_name());
+        patient_name.setText(curr_op.getPatient_name());
         surgeon_icon = view.findViewById(R.id.info_frag_surgeon_icon);
-        surgeon_tv = view.findViewById(R.id.info_frag_surgeon);
+
+        surgeon_tv = view.findViewById(R.id.info_frag_surgeon_tv);
+        surgeon_tv.setText(curr_op.getSurgeon());
+        nurse_tv = view.findViewById(R.id.info_frag_nurse_tv);
+        nurse_tv.setText(curr_op.getScrubNurse());
+        anesth_tv = view.findViewById(R.id.info_frag_anesth_tv);
+        anesth_tv.setText(curr_op.getAnaesthetist());
+        registrar_tv = view.findViewById(R.id.info_frag_registrar_tv);
+        registrar_tv.setText(curr_op.getRegistrar());
+
         header_layout = view.findViewById(R.id.ot_frag_header_info);
 
         // This works - would list still be better? depends on amount of staff
@@ -177,7 +221,7 @@ public class OTInfoFragmentV2 extends Fragment {
         covid_icon = view.findViewById(R.id.info_frag_covid_icon);
         int cov_colour = ContextCompat.getColor(mContext, R.color.notif_red);
 
-        if (curr.getIsCovid() == 1) {
+        if (curr_op.getIsCovid() == 1) {
             covid_icon.setColorFilter(cov_colour);
             covid_info_text.setText("Patient has COVID or is close-contact");
         } else {
@@ -186,7 +230,7 @@ public class OTInfoFragmentV2 extends Fragment {
         }
 
         procedure = view.findViewById(R.id.info_frag_procedure);
-        procedure.setText(curr.getProcedure());
+        procedure.setText(curr_op.getProcedure());
 
         stage1 = view.findViewById(R.id.info_frag_1);
         stage2 = view.findViewById(R.id.info_frag_2);
@@ -195,10 +239,10 @@ public class OTInfoFragmentV2 extends Fragment {
         stage5 = view.findViewById(R.id.info_frag_5);
 
         ConstraintLayout[] stages = {stage1, stage2, stage3, stage4, stage5};
-        int cat_colour = Color.parseColor(categoryToColour(curr.getCategory()));
-        Log.d("CAT", curr.getCategory());
-        Log.d("COL", categoryToColour(curr.getCategory()));
-        for (int i = 0; i < curr.getCurrent_stage(); i++) {
+        int cat_colour = Color.parseColor(categoryToColour(curr_op.getCategory()));
+        Log.d("CAT", curr_op.getCategory());
+        Log.d("COL", categoryToColour(curr_op.getCategory()));
+        for (int i = 0; i < curr_op.getCurrent_stage(); i++) {
             switch (i) {
                 case 0:
 //                    stages[i].setBackgroundColor(cat_colour);
@@ -220,7 +264,7 @@ public class OTInfoFragmentV2 extends Fragment {
             }
         }
         int off_white = ContextCompat.getColor(mContext, R.color.off_white);
-        for (int i = NUM_STAGES-1; i >= curr.getCurrent_stage() ; i--) {
+        for (int i = NUM_STAGES - 1; i >= curr_op.getCurrent_stage(); i--) {
             switch (i) {
                 case 0:
                     Drawable unwrappedDrawable1 = AppCompatResources.getDrawable(getContext(), R.drawable.left_rounded);
@@ -244,85 +288,92 @@ public class OTInfoFragmentV2 extends Fragment {
         // Keyboard comment enter handler
         comment_input.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
+
                 String text = comment_input.getText().toString();
+                long curr_sec = System.currentTimeMillis() / 1000L;
                 comment_input.setText("");
-                ArrayList<String> new_comments = new ArrayList<>(comments);
-                new_comments.add(text);
-                comments.clear();
-                comments.addAll(new_comments);
+                closeKeyboard();
+                addCommentToDatabase(text, curr_sec);
                 mAdapter.notifyDataSetChanged();
+
+                first_comment.setText(text);
+                first_comment_time.setText(epochTimeToHourMin(curr_sec));
+                num_of_comments.setText(String.valueOf(comments.size()));
+                num_of_comments_expand.setText(String.valueOf(comments.size()));
 
                 return true;
             }
             return false;
         });
 
-        comment_overview.setOnClickListener(v -> {
-            scrollView.fullScroll(ScrollView.FOCUS_UP);
-            Animation bottomUp = AnimationUtils.loadAnimation(getContext(),
-                    R.anim.slide_in_bottom);
-            bottomUp.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {}
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    bottom_info_section.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {}
-            });
-            comment_section.startAnimation(bottomUp);
-            comment_section.setVisibility(View.VISIBLE);
-        });
-
-        close_comment_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Animation topDown = AnimationUtils.loadAnimation(getContext(),
-                        R.anim.slide_out_bottom);
-                topDown.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {}
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        comment_section.setVisibility(View.GONE);
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                comment_section.startAnimation(topDown);
-                bottom_info_section.setVisibility(View.VISIBLE);
-
-            }
-        });
-
-        covid_click.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (covid_info_text.getVisibility() == View.GONE) {
-                    Animation topDown = AnimationUtils.loadAnimation(getContext(),
-                            R.anim.slide_in_right);
-                    covid_info_text.startAnimation(topDown);
-                    covid_info_text.setVisibility(View.VISIBLE);
-                } else if (covid_info_text.getVisibility() == View.VISIBLE) {
-                    Animation topUp = AnimationUtils.loadAnimation(getContext(),
-                            R.anim.slide_out_right);
-                    covid_info_text.startAnimation(topUp);
-                    covid_info_text.setVisibility(View.GONE);
-                }
-
-
-            }
-        });
+        // onClick handlers
+        comment_overview.setOnClickListener(v -> handleCommentOverviewClick(container));
+        close_comment_btn.setOnClickListener(v -> handleCommentsClose(container));
+        covid_click.setOnClickListener(v -> handleCovidClick(container));
 
         return view;
+    }
+
+
+    private void addCommentToDatabase(String text, long time) {
+        String ot_num = String.valueOf(operation.getTheatre_number());
+        String op_id = operation.getId();
+        FirebaseDatabase database = FirebaseDatabase.getInstance("https://hospitalscheduler-41566-default-rtdb.europe-west1.firebasedatabase.app/");
+        DatabaseReference ref = database.getReference("operations")
+                .child(ot_num)
+                .child(op_id);
+
+        comments.add(new Comment(text, time));
+        ref.child("comments").setValue(comments);
+        Collections.sort(comments);
+    }
+
+    private void handleCommentOverviewClick(ViewGroup v) {
+        scrollView.fullScroll(ScrollView.FOCUS_UP);
+
+        Transition transition = new Slide(Gravity.BOTTOM);
+        transition.setDuration(300);
+        transition.addTarget(comment_section);
+
+        TransitionManager.beginDelayedTransition(v, transition);
+        comment_section.setVisibility(View.VISIBLE);
+
+    }
+
+    private void handleCommentsClose(ViewGroup v) {
+        Transition transition = new Slide(Gravity.BOTTOM);
+        transition.setDuration(200);
+        transition.addTarget(comment_section);
+
+        TransitionManager.beginDelayedTransition(v, transition);
+        comment_section.setVisibility(View.GONE);
+        closeKeyboard();
+    }
+
+    private void closeKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager)
+                mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getView().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+
+    private void handleCovidClick(ViewGroup v) {
+        if (covid_info_text.getVisibility() == View.GONE) {
+            Transition transition = new Slide(Gravity.END);
+            transition.setDuration(200);
+            transition.addTarget(covid_info_text);
+
+            TransitionManager.beginDelayedTransition(v, transition);
+            covid_info_text.setVisibility(View.VISIBLE);
+
+        } else if (covid_info_text.getVisibility() == View.VISIBLE) {
+            Transition transition = new Slide(Gravity.START);
+            transition.setDuration(200);
+            transition.addTarget(covid_info_text);
+
+            TransitionManager.beginDelayedTransition(v, transition);
+            covid_info_text.setVisibility(View.GONE);
+        }
     }
 }

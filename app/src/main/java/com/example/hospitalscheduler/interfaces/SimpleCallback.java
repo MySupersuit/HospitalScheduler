@@ -1,4 +1,4 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.interfaces;
 
 public interface SimpleCallback<T> {
     void callback(T data);

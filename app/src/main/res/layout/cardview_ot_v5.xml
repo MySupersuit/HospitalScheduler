@@ -31,11 +31,12 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/curr_op_header"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:id="@+id/curr_op_header"
-                    android:background="@color/light_blue"/>
+                    android:background="#FFA726" />
+<!--                    android:background="@color/light_blue"/>-->
 
                 <TextView
                     android:layout_width="match_parent"

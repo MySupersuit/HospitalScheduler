@@ -1,20 +1,16 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
-import android.graphics.pdf.PdfDocument;
-import android.media.VolumeShaper;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.util.Log;
 
+import com.example.hospitalscheduler.fragments.OTInfoFragmentV2;
+import com.example.hospitalscheduler.fragments.OTScheduleFragment;
+import com.example.hospitalscheduler.objects.OperationV2;
+import com.example.hospitalscheduler.R;
+import com.example.hospitalscheduler.adapters.OTPagerAdapter;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -66,7 +62,7 @@ public class Operation_Info_Tab_Activity extends AppCompatActivity {
         }
 
         // pass full schedule
-        OTScheduleFragment sched_frag = OTScheduleFragment.newInstance(ot_num, schedule.get(0).getCurr_stage_start_time());
+        OTScheduleFragment sched_frag = OTScheduleFragment.newInstance(ot_num, schedule);
         pagerAdapter.add(sched_frag, "Schedule");
 
         viewPager.setAdapter(pagerAdapter);

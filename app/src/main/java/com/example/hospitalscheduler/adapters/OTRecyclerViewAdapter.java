@@ -1,4 +1,4 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +17,16 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hospitalscheduler.objects.OperatingTheatreV2;
+import com.example.hospitalscheduler.objects.OperationV2;
+import com.example.hospitalscheduler.activities.Operation_Info_Tab_Activity;
+import com.example.hospitalscheduler.interfaces.OverviewOnClickListener;
+import com.example.hospitalscheduler.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONObject;
 
-import static com.example.hospitalscheduler.Utilites.*;
+import static com.example.hospitalscheduler.utilities.Utilites.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -144,14 +149,6 @@ public class OTRecyclerViewAdapter extends RecyclerView.Adapter<OTRecyclerViewAd
             holder.notify.setChecked(false);
         }
 
-    }
-
-    // Assume more than 999 minutes is error
-    private String getMinutesSince(long timestamp) {
-        long curr_time = System.currentTimeMillis() / 1000L;
-        long difference = curr_time - timestamp;
-        int mins = (int) Math.ceil((double) difference / 60);
-        return (mins > 999) ? "0" : String.valueOf(mins);
     }
 
     private void setStagesColour(TextView[] stages, OperationV2 curr_op, OperationV2 next_op,

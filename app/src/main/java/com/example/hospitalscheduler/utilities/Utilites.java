@@ -1,20 +1,22 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.utilities;
 
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
+import com.example.hospitalscheduler.R;
+import com.example.hospitalscheduler.objects.Comment;
+import com.example.hospitalscheduler.objects.OperationV2;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
-import static com.example.hospitalscheduler.Constants.*;
+import static com.example.hospitalscheduler.utilities.Constants.*;
 
 public final class Utilites {
 
@@ -51,12 +53,11 @@ public final class Utilites {
             case VASCULAR:
                 return "#E6E6FA";
             case ORTHO:
-                return "#FFFFFF";
+                return "#FFCC80";
             case UROLOGY:
                 return "#98FB98";
             default:
                 return "#FFFFFF";
-//                return "errorInUtilities";
         }
     }
 
@@ -71,7 +72,7 @@ public final class Utilites {
             case VASCULAR:
                 return "#a1a1af";
             case ORTHO:
-                return "#b2b2b2";
+                return "#FF9800";
             case UROLOGY:
                 return "#6bb06b";
             default:
@@ -114,6 +115,48 @@ public final class Utilites {
         return sb.toString();
     }
 
+    public static String epochTimeToHourMin(long time) {
+        Date d = new Date(time*1000);
+        return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(d);
+    }
+
+    public static String epochTimeToDateHourMin(long time) {
+        Date d = new Date(time*1000);
+        return new SimpleDateFormat("dd/MM HH:mm", Locale.getDefault()).format(d);
+    }
+
+    // Assume more than 999 minutes is error
+    public static String getMinutesSince(long timestamp) {
+        long curr_time = System.currentTimeMillis() / 1000L;
+        long difference = curr_time - timestamp;
+        int mins = (int) Math.ceil((double) difference / 60);
+        return (mins > 999) ? "0" : String.valueOf(mins);
+    }
+
+    public static String timeSince(long timestamp) {
+        long curr_time = System.currentTimeMillis() / 1000L;
+        long sec_difference = curr_time - timestamp;
+        if (sec_difference < SECONDS_IN_MIN) return sec_difference + " seconds ";
+        if (sec_difference < SECONDS_IN_HOUR) {
+            int mins = (int) Math.ceil((double) sec_difference / SECONDS_IN_MIN);
+            return mins + " minutes";
+        }
+        if (sec_difference < SECONDS_IN_DAY) {
+            int hours = (int) Math.ceil((double) sec_difference / SECONDS_IN_HOUR);
+            return hours + " hours";
+        }
+        if (sec_difference < SECONDS_IN_30DAYS) {
+            int days = (int) Math.ceil((double) sec_difference / SECONDS_IN_DAY);
+            return (days > 1) ? " days" : " day";
+        }
+        if (sec_difference < SECONDS_IN_YEAR) {
+            int months = (int) Math.ceil((double) sec_difference / SECONDS_IN_30DAYS);
+            return (months > 1) ? " months" : " month";
+        }
+        return "Years";
+
+    }
+
     public static void writeInitDataDB() {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://hospitalscheduler-41566-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference ref = database.getReference("operations");
@@ -121,13 +164,17 @@ public final class Utilites {
         // OT 1
         DatabaseReference ot1ref = ref.child("1");
 
+        ArrayList<Comment> commentsTest = new ArrayList<>();
+//        commentsTest.add(new Comment("test", -1));
+
         String op11Key = ot1ref.push().getKey();
+
         OperationV2 op11 = new OperationV2("Annie", NEURO,
                     op11Key,
                     0,0, "Tim Key",
                 "", "Head Deflation",
                 "Reggie", "JD",
-                "Dr. John Zoidberg", 1);
+                "Dr. John Zoidberg", 1, commentsTest);
 
         ot1ref.child(op11Key).setValue(op11);
 
@@ -137,9 +184,28 @@ public final class Utilites {
                 0,0, "Terence Malik",
                 op11Key,  "Broken Heart",
                 "Reggie", "JD",
-                "Dr. John Zoidberg", 1);
+                "Dr. John Zoidberg", 1, commentsTest);
 
         ot1ref.child(op12Key).setValue(op12);
+
+        String op13Key = ot1ref.push().getKey();
+        OperationV2 op13 = new OperationV2("Suri", HEAD_AND_NECK,
+                op13Key,
+                0,0,"Sam Shephard",
+                op12Key, "Lower impacted wisdom tooth extraction",
+                "Greg", "Ted",
+                "Dr. Julius Hibbert", 1, commentsTest);
+
+        ot1ref.child(op13Key).setValue(op13);
+
+        String op14Key = ot1ref.push().getKey();
+        OperationV2 op14 = new OperationV2("Jack", ORTHO,
+                op14Key,
+                1,0,"Doc Torrance",
+                op13Key, "Visions of Tony",
+                "Matt", "Carla",
+                "Dr. Strangelove", 1, commentsTest);
+        ot1ref.child(op14Key).setValue(op14);
 
         // OT 2
         DatabaseReference ot2ref = ref.child("2");
@@ -150,7 +216,7 @@ public final class Utilites {
                 0,0, "Wes Anderson",
                 "",  "Vascularitis",
                 "Reginald", "Turk",
-                "Dr. Nick Riviera", 2);
+                "Dr. Nick Riviera", 2, commentsTest);
 
         ot2ref.child(op21Key).setValue(op21);
 
@@ -160,7 +226,7 @@ public final class Utilites {
                 0,0, "Sofia Coppola",
                 op21Key,  "Head Deflation",
                 "Reggie", "JD",
-                "Dr. John Zoidberg", 1);
+                "Dr. John Zoidberg", 2, commentsTest);
 
         ot2ref.child(op22Key).setValue(op22);
 
@@ -173,7 +239,7 @@ public final class Utilites {
                 0,0, "Bong Joon Ho",
                 "",  "Blocked Nose",
                 "Francis", "Todd",
-                "Dr. Perry Cox", 3);
+                "Dr. Perry Cox", 3, commentsTest);
 
         ot3ref.child(op31Key).setValue(op31);
 
@@ -183,7 +249,7 @@ public final class Utilites {
                 0,0, "Jim Jarmusch",
                 op31Key,  "Vascularitis",
                 "John", "Elliot",
-                "Dr. Greg House", 3);
+                "Dr. Greg House", 3, commentsTest);
 
         ot3ref.child(op32Key).setValue(op32);
 
@@ -196,7 +262,7 @@ public final class Utilites {
                 0,0, "Jim Jarmusch",
                 "",  "Spare Ribs",
                 "John", "Elliot",
-                "Dr. Greg House", 4);
+                "Dr. Greg House", 4, commentsTest);
 
         ot4ref.child(op41Key).setValue(op41);
 
@@ -206,7 +272,7 @@ public final class Utilites {
                 0,0, "Bong Joon Ho",
                 op41Key,  "Blocked Nose",
                 "Francis", "Todd",
-                "Dr. Perry Cox", 4);
+                "Dr. Perry Cox", 4, commentsTest);
 
         ot4ref.child(op42Key).setValue(op42);
 
@@ -219,7 +285,7 @@ public final class Utilites {
                 0,0, "Christopher Nolan",
                 "",  "Broken Heart",
                 "Mert", "Amelia",
-                "Dr. Who", 5);
+                "Dr. Who", 5, commentsTest);
 
         ot5ref.child(op51Key).setValue(op51);
 
@@ -229,7 +295,7 @@ public final class Utilites {
                 0,0, "Jim Jarmusch",
                 op51Key,  "Spare Ribs",
                 "John", "Elliot",
-                "Dr. Greg House", 5);
+                "Dr. Greg House", 5, commentsTest);
 
         ot5ref.child(op52Key).setValue(op52);
 

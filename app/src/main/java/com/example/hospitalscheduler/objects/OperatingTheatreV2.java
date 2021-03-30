@@ -1,4 +1,4 @@
-package com.example.hospitalscheduler;
+package com.example.hospitalscheduler.objects;
 
 import java.util.ArrayList;
 
