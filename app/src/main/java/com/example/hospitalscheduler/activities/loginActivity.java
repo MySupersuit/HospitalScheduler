@@ -25,14 +25,15 @@ public class loginActivity extends AppCompatActivity {
     //Number of attempts displayed on the login screen
     private TextView numberOfAttempts;
 
-    // Username and password entered
-    private EditText username;
+    // Email and password entered
+    //private EditText username;
+    private EditText userEmailAddress;
     private EditText userPassword;
 
     //Actual credentials(username, password) used for comparison
     //final = cannot change the value
-    private final String sampleUsername = "12345";
-    private final String samplePassword = "password";
+    //private final String sampleUsername = "12345";
+    //private final String samplePassword = "password";
 
     // Boolean to validate the credentials - check if true or false
     boolean isCorrectUsernameAndPassword= false; //set false by default
