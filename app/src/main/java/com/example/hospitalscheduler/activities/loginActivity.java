@@ -49,19 +49,9 @@ public class loginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //XML variable linked to Java variable for each element
+        //Link the Java Variables to XML - call function
+        xmlToJava();
 
-        //Login button
-        loginButton = findViewById(R.id.confirmLoginbutton);
-        //Number of attempts text
-        numberOfAttempts = findViewById(R.id.textViewNumberOfAttempts);
-
-        //Retrieve the username and password entered
-        username = findViewById(R.id.editTextHospitalUsername);
-        userPassword = findViewById(R.id.editTextAppPassword);
-
-        //Layout from XML
-        layout = findViewById(R.id.loginLayout);
 
         // For now - the login button moves to the Overview screen
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -159,5 +149,23 @@ public class loginActivity extends AppCompatActivity {
             return true;
         }
         return false; //are incorrect
+    }
+
+    // Method tp assign XML variables to Java variables
+    private void xmlToJava()
+    {
+        //User email address
+        userEmailAddress = (EditText)findViewById(R.id.editTextHospitalEmail);
+        //User password
+        userPassword = (EditText)findViewById(R.id.editTextAppPassword);
+        //Login button
+        loginButton = findViewById(R.id.confirmLoginbutton);
+
+        //Number of attempts text
+        numberOfAttempts = findViewById(R.id.textViewNumberOfAttempts);
+        //Layout from XML
+        layout = findViewById(R.id.loginLayout);
+
+
     }
 }
