@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.hospitalscheduler.R;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class loginActivity extends AppCompatActivity {
 
@@ -44,6 +45,9 @@ public class loginActivity extends AppCompatActivity {
     //Layout
     ConstraintLayout layout;
 
+    //For Firebase authentication
+    private FirebaseAuth firebaseAuthentication;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +55,9 @@ public class loginActivity extends AppCompatActivity {
 
         //Link the Java Variables to XML - call function
         xmlToJava();
+
+        //Firebase Authentication in app
+        firebaseAuthentication = FirebaseAuth.getInstance();
 
 
         // For now - the login button moves to the Overview screen
@@ -151,7 +158,7 @@ public class loginActivity extends AppCompatActivity {
         return false; //are incorrect
     }
 
-    // Method tp assign XML variables to Java variables
+    // Method tp assign XML layout variables to Java variables
     private void xmlToJava()
     {
         //User email address
