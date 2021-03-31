@@ -37,7 +37,7 @@ public final class Utilites {
 //                return R.drawable.urology;
                 return R.drawable.ic_urology_icon;
             default:
-                return -1;
+                return R.drawable.no_data_icon;
         }
     }
 
@@ -56,6 +56,8 @@ public final class Utilites {
                 return "#FFCC80";
             case UROLOGY:
                 return "#98FB98";
+            case NO_OP:
+                return "#EAEAEA";
             default:
                 return "#FFFFFF";
         }
@@ -138,23 +140,45 @@ public final class Utilites {
         long sec_difference = curr_time - timestamp;
         if (sec_difference < SECONDS_IN_MIN) return sec_difference + " seconds ";
         if (sec_difference < SECONDS_IN_HOUR) {
-            int mins = (int) Math.ceil((double) sec_difference / SECONDS_IN_MIN);
-            return mins + " minutes";
+            int mins = (int) Math.round((double) sec_difference / SECONDS_IN_MIN);
+            return mins + ((mins > 1) ? " minutes" : " minute");
         }
         if (sec_difference < SECONDS_IN_DAY) {
-            int hours = (int) Math.ceil((double) sec_difference / SECONDS_IN_HOUR);
-            return hours + " hours";
+            int hours = (int) Math.round((double) sec_difference / SECONDS_IN_HOUR);
+            return hours + ((hours > 1) ? " hours" : " hour");
         }
         if (sec_difference < SECONDS_IN_30DAYS) {
-            int days = (int) Math.ceil((double) sec_difference / SECONDS_IN_DAY);
-            return (days > 1) ? " days" : " day";
+            int days = (int) Math.round((double) sec_difference / SECONDS_IN_DAY);
+            return days + ((days > 1) ? " days" : " day");
         }
         if (sec_difference < SECONDS_IN_YEAR) {
-            int months = (int) Math.ceil((double) sec_difference / SECONDS_IN_30DAYS);
-            return (months > 1) ? " months" : " month";
+            int months = (int) Math.round((double) sec_difference / SECONDS_IN_30DAYS);
+            return months + ((months > 1) ? " months" : " month");
         }
         return "Years";
 
+    }
+
+    public static OperationV2 getCurrentOperation(ArrayList<OperationV2> schedule) {
+        if (schedule.size() <= 0) {
+            return null;
+        }
+        for (OperationV2 op : schedule) {
+            if (op.getCurrent_stage() <= NUM_STAGES) {
+                return op;
+            }
+        }
+        return null;
+    }
+
+    // could be bad, just takes operation after Current Operation
+    public static OperationV2 getNextOperation(ArrayList<OperationV2> schedule, OperationV2 curr) {
+        int curr_index = schedule.indexOf(curr);
+        if (curr_index+1 >= schedule.size()) {
+            return null;
+        } else {
+            return schedule.get(curr_index+1);
+        }
     }
 
     public static void writeInitDataDB() {

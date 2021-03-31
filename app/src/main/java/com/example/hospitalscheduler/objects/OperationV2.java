@@ -7,6 +7,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.hospitalscheduler.utilities.Constants.*;
+
 public class OperationV2 implements Parcelable {
     public String anaesthetist;
     public String category;
@@ -75,6 +77,25 @@ public class OperationV2 implements Parcelable {
         this.comments = comments;
 
         this.id = id;
+        this.current_stage = 0;
+        this.curr_stage_start_time = -1;
+    }
+
+    // null constructor
+    public OperationV2(int theatre_number) {
+        this.anaesthetist = "";
+        this.category = NO_OP;
+        this.isCovid = 0;
+        this.isDelayed = 0;
+        this.patient_name = "";
+        this.previous_op_id = "";
+        this.procedure = "";
+        this.registrar = "";
+        this.scrubNurse = "";
+        this.surgeon = "No Operation";
+        this.theatre_number = theatre_number;
+        this.comments = new ArrayList<>();
+        this.id = "";
         this.current_stage = 0;
         this.curr_stage_start_time = -1;
     }

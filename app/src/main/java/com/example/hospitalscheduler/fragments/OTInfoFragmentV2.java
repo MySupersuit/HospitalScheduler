@@ -101,10 +101,11 @@ public class OTInfoFragmentV2 extends Fragment {
     ImageView covid_icon;
     ScrollView scrollView;
     TextView surgeon_tv, nurse_tv, anesth_tv, registrar_tv;
+    ConstraintLayout surgeon, nurse, anesth, registrar;
     ImageView surgeon_icon;
-
-
+    TextView staff_title;
     ConstraintLayout stage1, stage2, stage3, stage4, stage5;
+    TextView tv1, tv2, tv3, tv4, tv5;
 
 
     public OTInfoFragmentV2() {
@@ -201,20 +202,32 @@ public class OTInfoFragmentV2 extends Fragment {
         patient_name.setText(curr_op.getPatient_name());
         surgeon_icon = view.findViewById(R.id.info_frag_surgeon_icon);
 
+        staff_title = view.findViewById(R.id.info_frag_staff_title);
+
         surgeon_tv = view.findViewById(R.id.info_frag_surgeon_tv);
         surgeon_tv.setText(curr_op.getSurgeon());
+        surgeon = view.findViewById(R.id.info_frag_surgeon);
         nurse_tv = view.findViewById(R.id.info_frag_nurse_tv);
         nurse_tv.setText(curr_op.getScrubNurse());
+        nurse = view.findViewById(R.id.info_frag_nurse);
         anesth_tv = view.findViewById(R.id.info_frag_anesth_tv);
         anesth_tv.setText(curr_op.getAnaesthetist());
+        anesth = view.findViewById(R.id.info_frag_anesth);
         registrar_tv = view.findViewById(R.id.info_frag_registrar_tv);
         registrar_tv.setText(curr_op.getRegistrar());
+        registrar = view.findViewById(R.id.info_frag_registrar);
 
         header_layout = view.findViewById(R.id.ot_frag_header_info);
 
-        // This works - would list still be better? depends on amount of staff
-//        surgeon_icon.setVisibility(View.GONE);
-//        surgeon_tv.setVisibility(View.GONE);
+        // if no operation
+        if (operation.getCategory().equals(NO_OP)) {
+            surgeon.setVisibility(View.GONE);
+            nurse.setVisibility(View.GONE);
+            anesth.setVisibility(View.GONE);
+            registrar.setVisibility(View.GONE);
+            comment_overview.setVisibility(View.GONE);
+            staff_title.setText(NO_OP);
+        }
 
         covid_click = view.findViewById(R.id.info_frag_covid_layout);
         covid_info_text = view.findViewById(R.id.info_frag_covid_info_text);
@@ -223,9 +236,9 @@ public class OTInfoFragmentV2 extends Fragment {
 
         if (curr_op.getIsCovid() == 1) {
             covid_icon.setColorFilter(cov_colour);
-            covid_info_text.setText("Patient has COVID or is close-contact");
+            covid_info_text.setText(R.string.COVID_message);
         } else {
-            covid_info_text.setText("No COVID information");
+            covid_info_text.setText(R.string.no_COVID_message);
             covid_icon.setColorFilter(ContextCompat.getColor(mContext, R.color.grey));
         }
 
@@ -242,7 +255,7 @@ public class OTInfoFragmentV2 extends Fragment {
         int cat_colour = Color.parseColor(categoryToColour(curr_op.getCategory()));
         Log.d("CAT", curr_op.getCategory());
         Log.d("COL", categoryToColour(curr_op.getCategory()));
-        for (int i = 0; i < curr_op.getCurrent_stage(); i++) {
+        for (int i = 0; i < curr_op.getCurrent_stage()-1; i++) {
             switch (i) {
                 case 0:
 //                    stages[i].setBackgroundColor(cat_colour);
@@ -251,7 +264,7 @@ public class OTInfoFragmentV2 extends Fragment {
                     DrawableCompat.setTint(wrappedDrawable1, cat_colour);
                     stages[i].setBackground(wrappedDrawable1);
                     break;
-                case 4:
+                case (NUM_STAGES-1):
 //                    stages[i].setBackgroundColor(cat_colour);
                     Drawable unwrappedDrawable2 = AppCompatResources.getDrawable(getContext(), R.drawable.right_rounded);
                     Drawable wrappedDrawable2 = DrawableCompat.wrap(unwrappedDrawable2);
@@ -272,7 +285,7 @@ public class OTInfoFragmentV2 extends Fragment {
                     DrawableCompat.setTint(wrappedDrawable1, off_white);
                     stages[i].setBackground(wrappedDrawable1);
                     break;
-                case 4:
+                case NUM_STAGES:
                     Drawable unwrappedDrawable2 = AppCompatResources.getDrawable(getContext(), R.drawable.right_rounded);
                     Drawable wrappedDrawable2 = DrawableCompat.wrap(unwrappedDrawable2);
                     DrawableCompat.setTint(wrappedDrawable2, off_white);
@@ -281,6 +294,38 @@ public class OTInfoFragmentV2 extends Fragment {
                 default:
                     stages[i].setBackgroundColor(off_white);
             }
+        }
+
+        tv1 = view.findViewById(R.id.info_frag_1_tv);
+        tv2 = view.findViewById(R.id.info_frag_2_tv);
+        tv3 = view.findViewById(R.id.info_frag_3_tv);
+        tv4 = view.findViewById(R.id.info_frag_4_tv);
+        tv5 = view.findViewById(R.id.info_frag_5_tv);
+        TextView[] stageTvs = {tv1, tv2, tv3, tv4, tv5};
+
+        int sec_colour = Color.parseColor(categoryToSecColour(operation.getCategory()));
+        int white = ContextCompat.getColor(mContext, R.color.white);
+        switch (operation.getCurrent_stage()) {
+            case 1:
+                Drawable unwrappedDrawable1 = AppCompatResources.getDrawable(getContext(), R.drawable.left_rounded);
+                Drawable wrappedDrawable1 = DrawableCompat.wrap(unwrappedDrawable1);
+                DrawableCompat.setTint(wrappedDrawable1, sec_colour);
+                stages[0].setBackground(wrappedDrawable1);
+                stageTvs[0].setTextColor(white);
+                break;
+            case NUM_STAGES:
+                Drawable unwrappedDrawable2 = AppCompatResources.getDrawable(getContext(), R.drawable.right_rounded);
+                Drawable wrappedDrawable2 = DrawableCompat.wrap(unwrappedDrawable2);
+                DrawableCompat.setTint(wrappedDrawable2, sec_colour);
+                stages[NUM_STAGES-1].setBackground(wrappedDrawable2);
+                stageTvs[NUM_STAGES-1].setTextColor(white);
+                break;
+            case 2:
+            case 3:
+            case 4:
+                 stages[operation.getCurrent_stage() - 1].setBackgroundColor(sec_colour);
+                 stageTvs[operation.getCurrent_stage() - 1].setTextColor(white);
+                 break;
         }
 
         header_layout.setBackgroundColor(cat_colour);

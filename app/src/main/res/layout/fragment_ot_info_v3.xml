@@ -201,6 +201,7 @@
                                 android:background="@drawable/left_rounded">
 
                                 <TextView
+                                    android:id="@+id/info_frag_1_tv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
@@ -230,7 +231,7 @@
                                 android:background="@color/off_white">
 
                                 <TextView
-
+                                    android:id="@+id/info_frag_2_tv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
@@ -267,6 +268,7 @@
                                 android:background="@color/off_white">
 
                                 <TextView
+                                    android:id="@+id/info_frag_3_tv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
@@ -294,6 +296,7 @@
                                 android:background="@color/off_white">
 
                                 <TextView
+                                    android:id="@+id/info_frag_4_tv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -322,6 +325,7 @@
                                 android:background="@drawable/right_rounded">
 
                                 <TextView
+                                    android:id="@+id/info_frag_5_tv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -349,7 +353,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:text="Staff"
+                            android:text="@string/staff"
                             android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"

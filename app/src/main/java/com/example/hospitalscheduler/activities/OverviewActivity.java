@@ -149,7 +149,6 @@ public class OverviewActivity extends AppCompatActivity {
                         myAdapter = new OTRecyclerViewAdapter(mContext, rv_OTlist, (ot_num) -> {
                             ObjectAnimator animator = animators.get(ot_num - 1);
                             stopAnimation(animator);
-
                         });
                         my_rv.setAdapter(myAdapter);
                         spinnerOff();

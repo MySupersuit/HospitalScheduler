@@ -40,4 +40,8 @@
     <string name="procedure">Procedure</string>
     <string name="patient">Patient</string>
     <string name="no_comments">No comments yet!</string>
+    <string name="covid">COVID</string>
+    <string name="staff">Staff</string>
+    <string name="COVID_message">Patient has COVID or is close-contact</string>
+    <string name="no_COVID_message">No COVID information</string>
 </resources>
