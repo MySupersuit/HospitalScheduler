@@ -8,12 +8,12 @@
     android:id="@+id/loginLayout">
 
     <EditText
-        android:id="@+id/editTextHospitalUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/editTextHospitalEmail"
+        android:layout_width="211dp"
+        android:layout_height="47dp"
         android:ems="10"
-        android:hint="EPR Username"
-        android:inputType="textPersonName"
+        android:hint="Hospital Email"
+        android:inputType="textEmailAddress"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -30,10 +30,10 @@
         android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextHospitalUsername"
-        app:layout_constraintVertical_bias="0.09" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextHospitalEmail"
+        app:layout_constraintVertical_bias="0.104" />
 
     <Button
         android:id="@+id/confirmLoginbutton"
@@ -65,11 +65,11 @@
         android:id="@+id/imageViewLogo"
         android:layout_width="331dp"
         android:layout_height="193dp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextHospitalUsername"
+        app:layout_constraintBottom_toTopOf="@+id/editTextHospitalEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.878"
+        app:layout_constraintVertical_bias="0.526"
         app:srcCompat="@drawable/transparentlogo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
