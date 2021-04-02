@@ -13,7 +13,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import static com.example.hospitalscheduler.utilities.Constants.*;
@@ -179,6 +181,24 @@ public final class Utilites {
         } else {
             return schedule.get(curr_index+1);
         }
+    }
+
+    public static boolean isCurrentOperation(ArrayList<OperationV2> schedule, OperationV2 op) {
+        OperationV2 curr = getCurrentOperation(schedule);
+        return curr.getId().equals(op.getId());
+    }
+
+    public static boolean isNextOperation(ArrayList<OperationV2> schedule, OperationV2 op) {
+        OperationV2 curr = getCurrentOperation(schedule);
+        OperationV2 next = getNextOperation(schedule, curr);
+        return next.getId().equals(op.getId());
+    }
+
+    public static Comment getMostRecentComment(List<Comment> comments) { ;
+        if (comments == null) return null;
+        if (comments.size() == 0) return null;
+        Collections.sort(comments);
+        return comments.get(0);
     }
 
     public static void writeInitDataDB() {
