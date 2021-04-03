@@ -12,5 +12,13 @@
         app:showAsAction="never"
         android:title="@string/menu_refresh"/>
 
+    <!--Added for the Sign Out option-->
+    <item
+        android:id="@+id/signOutOption"
+        android:orderInCategory="90"
+        app:showAsAction="always"
+        android:title="Sign Out">
+    </item>
+
 
 </menu>
