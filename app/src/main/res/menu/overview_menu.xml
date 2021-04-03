@@ -13,10 +13,11 @@
         android:title="@string/menu_refresh"/>
 
     <!--Added for the Sign Out option-->
+    <!-- Never = show within overflow menu-->
     <item
         android:id="@+id/signOutOption"
         android:orderInCategory="90"
-        app:showAsAction="always"
+        app:showAsAction="never"
         android:title="Sign Out">
     </item>
 

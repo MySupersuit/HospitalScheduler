@@ -36,6 +36,7 @@ import com.example.hospitalscheduler.interfaces.SimpleCallback;
 import com.example.hospitalscheduler.adapters.OTRecyclerViewAdapter;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -79,10 +80,16 @@ public class OverviewActivity extends AppCompatActivity {
     Context mContext;
     View mView;
 
+    //Added for Sign Out - For Firebase authentication
+    private FirebaseAuth firebaseAuthentication;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
+
+        //Added for Sign Out - Firebase Authentication in app
+        firebaseAuthentication = FirebaseAuth.getInstance();
 
 //        writeInitDataDB();
 //        return;
@@ -488,6 +495,10 @@ public class OverviewActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            //Added for the sign out option
+            case R.id.signOutOption:
+                //Sign out the user from the app
+                signOutUser();
             case R.id.show_notified:
                 toggleShowNotified();
                 return true;
@@ -500,6 +511,18 @@ public class OverviewActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Function to Sign Out the user
+     */
+    private void signOutUser()
+    {
+        //Sign Out the (current) user
+        firebaseAuthentication.signOut();
+        finish(); //activity is finished
+        // Login Activity relaunched
+        startActivity(new Intent(OverviewActivity.this, loginActivity.class));
+
+    }
     private void toggleShowNotified() {
         Log.d("TOGSTATE", String.valueOf(this.showOnlyNotified));
 //        if currently showing only notified then show all
