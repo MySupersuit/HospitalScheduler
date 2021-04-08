@@ -25,6 +25,8 @@ public class OperationV2 implements Parcelable {
     public String surgeon;
     public int theatre_number;
     public List<Comment> comments;
+    public String patient_sex;
+    public String patient_dob;
 
     public OperationV2() {
         // necessary empty constructor
@@ -37,7 +39,8 @@ public class OperationV2 implements Parcelable {
                        String patient_name, String previous_op_id,
                        String procedure, String registrar,
                        String scrubNurse, String surgeon,
-                       int theatre_number, List<Comment> comments) {
+                       int theatre_number, List<Comment> comments,
+                       String patient_sex, String patient_dob) {
         this.anaesthetist = anaesthetist;
         this.category = category;
         this.current_stage = current_stage;
@@ -53,6 +56,8 @@ public class OperationV2 implements Parcelable {
         this.surgeon = surgeon;
         this.theatre_number = theatre_number;
         this.comments = comments;
+        this.patient_sex = patient_sex;
+        this.patient_dob = patient_dob;
     }
 
     // constructor without stage info
@@ -62,7 +67,8 @@ public class OperationV2 implements Parcelable {
                        String patient_name, String previous_op_id,
                        String procedure, String registrar,
                        String scrubNurse, String surgeon,
-                       int theatre_number, List<Comment> comments) {
+                       int theatre_number, List<Comment> comments,
+                       String patient_sex, String patient_dob) {
         this.anaesthetist = anaesthetist;
         this.category = category;
         this.isCovid = isCovid;
@@ -75,6 +81,8 @@ public class OperationV2 implements Parcelable {
         this.surgeon = surgeon;
         this.theatre_number = theatre_number;
         this.comments = comments;
+        this.patient_sex = patient_sex;
+        this.patient_dob = patient_dob;
 
         this.id = id;
         this.current_stage = 0;
@@ -92,6 +100,8 @@ public class OperationV2 implements Parcelable {
         this.procedure = "";
         this.registrar = "";
         this.scrubNurse = "";
+        this.patient_dob = "";
+        this.patient_sex = "";
         this.surgeon = "No Operation";
         this.theatre_number = theatre_number;
         this.comments = new ArrayList<>();
@@ -108,6 +118,21 @@ public class OperationV2 implements Parcelable {
         this.comments = comments;
     }
 
+    public String getPatient_sex() {
+        return patient_sex;
+    }
+
+    public void setPatient_sex(String patient_sex) {
+        this.patient_sex = patient_sex;
+    }
+
+    public String getPatient_dob() {
+        return patient_dob;
+    }
+
+    public void setPatient_dob(String patient_dob) {
+        this.patient_dob = patient_dob;
+    }
 
     public String getAnaesthetist() {
         return anaesthetist;
@@ -256,6 +281,8 @@ public class OperationV2 implements Parcelable {
         dest.writeString(this.surgeon);
         dest.writeInt(this.theatre_number);
         dest.writeTypedList(this.comments);
+        dest.writeString(this.patient_sex);
+        dest.writeString(this.patient_dob);
     }
 
     protected OperationV2(Parcel in) {
@@ -275,6 +302,8 @@ public class OperationV2 implements Parcelable {
         this.theatre_number = in.readInt();
         this.comments = new ArrayList<Comment>();
         in.readTypedList(this.comments, Comment.CREATOR);
+        this.patient_sex = in.readString();
+        this.patient_dob = in.readString();
     }
 
 }

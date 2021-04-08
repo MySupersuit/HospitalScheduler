@@ -106,6 +106,7 @@ public class OTInfoFragmentV2 extends Fragment {
     TextView staff_title;
     ConstraintLayout stage1, stage2, stage3, stage4, stage5;
     TextView tv1, tv2, tv3, tv4, tv5;
+    TextView patient_sex, patient_dob, patient_age;
 
 
     public OTInfoFragmentV2() {
@@ -198,8 +199,20 @@ public class OTInfoFragmentV2 extends Fragment {
         category.setText(op_cat);
         ot_num_tv = view.findViewById(R.id.info_frag_ot_num);
         ot_num_tv.setText("OT " + ot_num);
+
         patient_name = view.findViewById(R.id.info_frag_patient_name);
         patient_name.setText(curr_op.getPatient_name());
+        patient_sex = view.findViewById(R.id.info_frag_patient_sex);
+        patient_sex.setText(curr_op.getPatient_sex());
+        patient_dob = view.findViewById(R.id.info_frag_patient_dob);
+        patient_dob.setText(curr_op.getPatient_dob());
+
+        patient_age = view.findViewById(R.id.info_frag_patient_age);
+        String age = getAgeFromDOB(curr_op.getPatient_dob());
+        patient_age.setText(getString(R.string.age_placeholder, age));
+
+
+
         surgeon_icon = view.findViewById(R.id.info_frag_surgeon_icon);
 
         staff_title = view.findViewById(R.id.info_frag_staff_title);

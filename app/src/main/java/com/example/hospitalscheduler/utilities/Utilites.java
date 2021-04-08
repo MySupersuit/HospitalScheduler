@@ -12,6 +12,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -201,6 +203,17 @@ public final class Utilites {
         return comments.get(0);
     }
 
+    // in form YYYY/MM/DD
+    public static String getAgeFromDOB(String dob) {
+        String[] splits = dob.split("/");
+        int year = Integer.parseInt(splits[0]);
+        int month = Integer.parseInt(splits[1]);
+        int day = Integer.parseInt(splits[2]);
+        LocalDate birthdate = LocalDate.of(year, month-1, day);
+        LocalDate now = LocalDate.now();
+        return String.valueOf(Period.between(birthdate, now).getYears());
+    }
+
     public static void writeInitDataDB() {
         FirebaseDatabase database = FirebaseDatabase.getInstance("https://hospitalscheduler-41566-default-rtdb.europe-west1.firebasedatabase.app/");
         DatabaseReference ref = database.getReference("operations");
@@ -218,7 +231,8 @@ public final class Utilites {
                     0,0, "Tim Key",
                 "", "Head Deflation",
                 "Reggie", "JD",
-                "Dr. John Zoidberg", 1, commentsTest);
+                "Dr. John Zoidberg", 1, commentsTest,
+                "M", "1976/09/02");
 
         ot1ref.child(op11Key).setValue(op11);
 
@@ -228,7 +242,8 @@ public final class Utilites {
                 0,0, "Terence Malik",
                 op11Key,  "Broken Heart",
                 "Reggie", "JD",
-                "Dr. John Zoidberg", 1, commentsTest);
+                "Dr. John Zoidberg", 1, commentsTest,
+                "M", "1943/11/03");
 
         ot1ref.child(op12Key).setValue(op12);
 
@@ -238,7 +253,8 @@ public final class Utilites {
                 0,0,"Sam Shephard",
                 op12Key, "Lower impacted wisdom tooth extraction",
                 "Greg", "Ted",
-                "Dr. Julius Hibbert", 1, commentsTest);
+                "Dr. Julius Hibbert", 1, commentsTest,
+                "M", "1943/11/05");
 
         ot1ref.child(op13Key).setValue(op13);
 
@@ -248,7 +264,8 @@ public final class Utilites {
                 1,0,"Doc Torrance",
                 op13Key, "Visions of Tony",
                 "Matt", "Carla",
-                "Dr. Strangelove", 1, commentsTest);
+                "Dr. Strangelove", 1, commentsTest,
+                "M", "1971/04/22");
         ot1ref.child(op14Key).setValue(op14);
 
         // OT 2
@@ -260,7 +277,8 @@ public final class Utilites {
                 0,0, "Wes Anderson",
                 "",  "Vascularitis",
                 "Reginald", "Turk",
-                "Dr. Nick Riviera", 2, commentsTest);
+                "Dr. Nick Riviera", 2, commentsTest,
+                "M", "1969/05/01");
 
         ot2ref.child(op21Key).setValue(op21);
 
@@ -270,7 +288,8 @@ public final class Utilites {
                 0,0, "Sofia Coppola",
                 op21Key,  "Head Deflation",
                 "Reggie", "JD",
-                "Dr. John Zoidberg", 2, commentsTest);
+                "Dr. John Zoidberg", 2, commentsTest,
+                "F", "1971/05/14");
 
         ot2ref.child(op22Key).setValue(op22);
 
@@ -283,7 +302,8 @@ public final class Utilites {
                 0,0, "Bong Joon Ho",
                 "",  "Blocked Nose",
                 "Francis", "Todd",
-                "Dr. Perry Cox", 3, commentsTest);
+                "Dr. Perry Cox", 3, commentsTest,
+                "M", "1969/09/14");
 
         ot3ref.child(op31Key).setValue(op31);
 
@@ -293,7 +313,8 @@ public final class Utilites {
                 0,0, "Jim Jarmusch",
                 op31Key,  "Vascularitis",
                 "John", "Elliot",
-                "Dr. Greg House", 3, commentsTest);
+                "Dr. Greg House", 3, commentsTest,
+                "M", "1953/01/22");
 
         ot3ref.child(op32Key).setValue(op32);
 
@@ -306,7 +327,8 @@ public final class Utilites {
                 0,0, "Jim Jarmusch",
                 "",  "Spare Ribs",
                 "John", "Elliot",
-                "Dr. Greg House", 4, commentsTest);
+                "Dr. Greg House", 4, commentsTest,
+                "M", "1953/01/22");
 
         ot4ref.child(op41Key).setValue(op41);
 
@@ -316,7 +338,8 @@ public final class Utilites {
                 0,0, "Bong Joon Ho",
                 op41Key,  "Blocked Nose",
                 "Francis", "Todd",
-                "Dr. Perry Cox", 4, commentsTest);
+                "Dr. Perry Cox", 4, commentsTest,
+                "M", "1953/01/22");
 
         ot4ref.child(op42Key).setValue(op42);
 
@@ -329,7 +352,8 @@ public final class Utilites {
                 0,0, "Christopher Nolan",
                 "",  "Broken Heart",
                 "Mert", "Amelia",
-                "Dr. Who", 5, commentsTest);
+                "Dr. Who", 5, commentsTest,
+                "M", "1970/07/30");
 
         ot5ref.child(op51Key).setValue(op51);
 
@@ -339,7 +363,8 @@ public final class Utilites {
                 0,0, "Jim Jarmusch",
                 op51Key,  "Spare Ribs",
                 "John", "Elliot",
-                "Dr. Greg House", 5, commentsTest);
+                "Dr. Greg House", 5, commentsTest,
+                "M", "1953/01/22");
 
         ot5ref.child(op52Key).setValue(op52);
 
