@@ -209,7 +209,7 @@ public final class Utilites {
         int year = Integer.parseInt(splits[0]);
         int month = Integer.parseInt(splits[1]);
         int day = Integer.parseInt(splits[2]);
-        LocalDate birthdate = LocalDate.of(year, month-1, day);
+        LocalDate birthdate = LocalDate.of(year, month, day);
         LocalDate now = LocalDate.now();
         return String.valueOf(Period.between(birthdate, now).getYears());
     }
