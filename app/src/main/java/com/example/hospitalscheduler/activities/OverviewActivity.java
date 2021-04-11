@@ -260,6 +260,8 @@ public class OverviewActivity extends AppCompatActivity {
         if (isCurrentOperation(sched, op) || op.getCurrent_stage() > 5) titleString = titleString + " • Current Op";
         else if (isNextOperation(sched, op)) titleString = titleString + " • Next Op";
 
+        Log.d("STR", String.valueOf(updateString.length()));
+        if (updateString.length() == 0) return;
         // SEND notification if notified of changed OT
         Notification.Builder builder = new Notification.Builder(
                 this, "TEST_CHANNEL_ID")
@@ -267,6 +269,8 @@ public class OverviewActivity extends AppCompatActivity {
                 .setContentTitle(titleString)
                 .setContentText(updateString)
                 .setAutoCancel(true);
+
+
 
         // click notification brings to overview screen
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0,
@@ -306,9 +310,14 @@ public class OverviewActivity extends AppCompatActivity {
         if (newOp.getIsDelayed() != oldOp.getIsDelayed()) {
             messages.add((newOp.getIsDelayed() == 1) ? "Operation Delayed" : "Operation no longer delayed");
         }
-        if (newOp.getComments().size() != oldOp.getComments().size()) {
-            messages.add("New comment: " + getMostRecentComment(newOp.getComments()).getContent());
+
+        if (newOp.getComments() == null) return messages;
+        if (newOp.getComments().size() > 0 && oldOp.getComments() == null) {
+            if (newOp.getComments().size() != oldOp.getComments().size()) {
+                messages.add("New comment: " + getMostRecentComment(newOp.getComments()).getContent());
+            }
         }
+
         return messages;
     }
 
