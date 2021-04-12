@@ -280,16 +280,13 @@ public class OverviewActivity extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         int notificationId = 1;
         notificationManager.notify(notificationId, builder.build());
-        // Outline OT in Yellow?
-        // find changed OT in lstOTv3
 
+        // TODO don't animate if in more info screen for that OT
         for (int i = 0; i < rv_OTlist.size(); i++) {
             if (oldOp.getTheatre_number() == rv_OTlist.get(i).getNumber()) {
-                Log.d("TET", String.valueOf(op.getTheatre_number()));
                 MaterialCardView cv = (MaterialCardView) my_rv.getChildAt(i);
                 animate(cv, op.getTheatre_number());
                 break;
-
             }
         }
     }
@@ -312,10 +309,9 @@ public class OverviewActivity extends AppCompatActivity {
         }
 
         if (newOp.getComments() == null) return messages;
-        if (newOp.getComments().size() > 0 && oldOp.getComments() == null) {
-            if (newOp.getComments().size() != oldOp.getComments().size()) {
-                messages.add("New comment: " + getMostRecentComment(newOp.getComments()).getContent());
-            }
+        if ((newOp.getComments().size() > 0 && oldOp.getComments() == null) ||
+                (newOp.getComments().size() > oldOp.getComments().size())) {
+            messages.add("New comment: " + getMostRecentComment(newOp.getComments()).getContent());
         }
 
         return messages;
