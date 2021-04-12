@@ -260,6 +260,8 @@ public class OverviewActivity extends AppCompatActivity {
         if (isCurrentOperation(sched, op) || op.getCurrent_stage() > 5) titleString = titleString + " • Current Op";
         else if (isNextOperation(sched, op)) titleString = titleString + " • Next Op";
 
+        Log.d("STR", String.valueOf(updateString.length()));
+        if (updateString.length() == 0) return;
         // SEND notification if notified of changed OT
         Notification.Builder builder = new Notification.Builder(
                 this, "TEST_CHANNEL_ID")
@@ -267,6 +269,8 @@ public class OverviewActivity extends AppCompatActivity {
                 .setContentTitle(titleString)
                 .setContentText(updateString)
                 .setAutoCancel(true);
+
+
 
         // click notification brings to overview screen
         PendingIntent contentIntent = PendingIntent.getActivity(mContext, 0,
@@ -276,16 +280,13 @@ public class OverviewActivity extends AppCompatActivity {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         int notificationId = 1;
         notificationManager.notify(notificationId, builder.build());
-        // Outline OT in Yellow?
-        // find changed OT in lstOTv3
 
+        // TODO don't animate if in more info screen for that OT
         for (int i = 0; i < rv_OTlist.size(); i++) {
             if (oldOp.getTheatre_number() == rv_OTlist.get(i).getNumber()) {
-                Log.d("TET", String.valueOf(op.getTheatre_number()));
                 MaterialCardView cv = (MaterialCardView) my_rv.getChildAt(i);
                 animate(cv, op.getTheatre_number());
                 break;
-
             }
         }
     }
@@ -306,9 +307,13 @@ public class OverviewActivity extends AppCompatActivity {
         if (newOp.getIsDelayed() != oldOp.getIsDelayed()) {
             messages.add((newOp.getIsDelayed() == 1) ? "Operation Delayed" : "Operation no longer delayed");
         }
-        if (newOp.getComments().size() != oldOp.getComments().size()) {
+
+        if (newOp.getComments() == null) return messages;
+        if ((newOp.getComments().size() > 0 && oldOp.getComments() == null) ||
+                (newOp.getComments().size() > oldOp.getComments().size())) {
             messages.add("New comment: " + getMostRecentComment(newOp.getComments()).getContent());
         }
+
         return messages;
     }
 
