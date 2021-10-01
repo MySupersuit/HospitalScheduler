@@ -1,6 +1,6 @@
 # SmoothOp - App
 
-<img align="left" height="140" src="screenshotsGit/transparentlogo.png" alt="SmoothOp Logo"> 
+<img align="left" height="150" src="screenshotsGit/transparentlogo.png" alt="SmoothOp Logo"> 
 SmoothOp is an app aiming to increase efficiency where it matters most. The COVID-19 pandemic has dramatically increased waiting times in hospitals so maximum efficiency has become paramount.
 
 <br>With a multitude of fast-moving parts, it's difficult to keep track of what's going on in an operating theatre. SmoothOp can help keep everyone up to date.
