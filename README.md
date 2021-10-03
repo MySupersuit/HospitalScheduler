@@ -16,7 +16,7 @@ You can track how long an operation has been at a certain stage for at a glance 
 
 Tapping on an operation brings you to a screen showing more information where quick comments can also be sent.
 
-The app is controlled by a web controller. Operating theatres are already equipped with computers so no extra hardware is needed.
+Updating the data is done through a web controller. Operating theatres are already equipped with computers so no extra hardware is needed.
 <br><br>
 ### Technology
 * Android Studio + Java
