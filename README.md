@@ -25,5 +25,5 @@ Updating the data is done through a web controller. Operating theatres are alrea
 
 ### Authors
 * Tom Moran - App, Database, some web app
-* Imalia Gonzalezova - Login
+* Imalia Gonzalezova - App Login
 * Mikhail Dyudlin - Web app
